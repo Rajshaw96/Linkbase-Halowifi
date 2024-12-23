@@ -29,6 +29,7 @@ app.use(cors({
 }));
 
 // Route handling
+app.get("/", (req, res) => res.send("Hello from Firebase!"));
 app.use('/propertiesDetails', propertyRoutes);
 app.use('/userConnect', connectRoutes);
 app.use('/connect/external',wifiRoutes);

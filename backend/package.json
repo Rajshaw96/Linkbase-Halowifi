@@ -1,10 +1,10 @@
 {
-  "name": "linkbase-halowifi",
+  "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
-    "start": "node index.js",
+    "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
@@ -14,7 +14,9 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^1.7.9",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.0.1",
     "helmet": "^8.0.0",
