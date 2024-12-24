@@ -107,7 +107,7 @@ document.getElementById("connectBtn").addEventListener("click", async () => {
     };
 
     // API URL
-    const apiUrl = "http://localhost:8000/api/user-connect";
+    const apiUrl = APP_API+'/userConnect';
 
     try {
         // Make the API call using fetch

@@ -7,7 +7,7 @@ const triggerLogin = async (req, res) => {
     location_id,
     network_id,
     session_id,
-    login_app_id,
+    user_id,
     session_duration,
     bandwidth,
     login_username,
@@ -18,7 +18,7 @@ const triggerLogin = async (req, res) => {
   } = req.body;
 
   // Validate request parameters
-  if (!location_id || !network_id || !session_id || !login_app_id) {
+  if (!location_id || !network_id || !session_id || !user_id) {
     return res.status(400).json({
       status: 'error',
       message: 'Invalid request parameters',
@@ -44,12 +44,12 @@ const triggerLogin = async (req, res) => {
     // Make the API request
     console.log('Triggering login with external API...');
     const response = await axios.post(
-      'http://localhost:8000/api/connect/external/trigger-login',
+      'https://us-central1-linkbase-halowifi.cloudfunctions.net/api/connect/external/trigger-login',
       {
         location_id,
         network_id,
         session_id,
-        login_app_id,
+        user_id,
         session_duration,
         bandwidth,
         login_username,
