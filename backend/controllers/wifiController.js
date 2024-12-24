@@ -7,7 +7,7 @@ const triggerLogin = async (req, res) => {
     location_id,
     network_id,
     session_id,
-    user_id,
+    login_app_id,
     session_duration,
     bandwidth,
     login_username,
@@ -18,7 +18,7 @@ const triggerLogin = async (req, res) => {
   } = req.body;
 
   // Validate request parameters
-  if (!location_id || !network_id || !session_id || !user_id) {
+  if (!location_id || !network_id || !session_id || !login_app_id) {
     return res.status(400).json({
       status: 'error',
       message: 'Invalid request parameters',
@@ -49,7 +49,7 @@ const triggerLogin = async (req, res) => {
         location_id,
         network_id,
         session_id,
-        user_id,
+        login_app_id,
         session_duration,
         bandwidth,
         login_username,
