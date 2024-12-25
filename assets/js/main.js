@@ -65,7 +65,7 @@ $("#loginBtn").on('click', function() {
     var location_id = params.get('location_id');
     // var user_id = params.get('user_id');
     var session_id = params.get('session_id');
-    var login_app_id = 434;
+    var login_app_id = params.get('login_app_id');
 
     var login_data = {
         location_id: location_id,
