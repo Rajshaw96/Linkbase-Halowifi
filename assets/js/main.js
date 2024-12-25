@@ -74,7 +74,7 @@ $("#loginBtn").on('click', function() {
         login_app_id: login_app_id
     };
 
-    var guest_login_api_url = APP_API+'/trigger-login';
+    var guest_login_api_url = APP_API+'/connect/external/trigger-login';
 
     $.ajax({
         url: guest_login_api_url,
