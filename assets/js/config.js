@@ -1,1 +1,1 @@
-const APP_API="https://us-central1-linkbase-halowifi.cloudfunctions.net/api";
+const APP_API="https://linkbase.tech/api";

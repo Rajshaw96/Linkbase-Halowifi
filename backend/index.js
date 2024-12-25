@@ -17,7 +17,11 @@ app.use(helmet());
 app.use(express.json());
 
 // Configure CORS with allowed origins
-const allowedOrigins = ['http://127.0.0.1:5500', 'https://linkbase.tech'];
+const allowedOrigins = [
+  'http://127.0.0.1:5500', 
+  'https://linkbase.tech', 
+  'https://linkbase-halowifi.web.app'
+];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -29,17 +33,13 @@ app.use(cors({
   }
 }));
 
-// Route handling
+// Test Route
 app.get("/", (req, res) => res.send("Hello from Firebase!"));
+
+// API Routes
 app.use('/propertiesDetails', propertyRoutes);
 app.use('/userConnect', connectRoutes);
 app.use('/connect/external', wifiRoutes);
-
-// Uncomment the following for local testing (when not deploying to Firebase)
-// const port = process.env.PORT || 8080;
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
 
 // Firebase Function export
 exports.api = functions.https.onRequest(app);
