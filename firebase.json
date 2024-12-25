@@ -14,7 +14,7 @@
     ]
   },
   "functions": {
-    "source": "backend", 
+    "source": "/backend", 
     "ignore": [
       "node_modules",
       ".git",

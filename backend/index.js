@@ -19,7 +19,8 @@ app.use(express.json());
 // Configure CORS with allowed origins
 const allowedOrigins = [
   'http://127.0.0.1:5500', 
-  'https://linkbase.tech', 
+  'https://linkbase.tech',
+  'https://linkbase.tech/', 
   'https://linkbase-halowifi.web.app'
 ];
 
