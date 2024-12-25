@@ -8,9 +8,9 @@ const getHaloWiFiToken = async () => {
       return null;
     }
 
-    console.log('Fetching HaloWiFi token...');
+    //console.log('Fetching HaloWiFi token...');
     const response = await axios.post(
-      'https://one.halowifi.com/api/external/token',
+      process.env.EXTERNAL_TOKEN_API_URL,
       {
         api_key: process.env.API_KEY,
         api_secret: process.env.API_SECRET,
@@ -21,7 +21,7 @@ const getHaloWiFiToken = async () => {
     );
 
     if (response.data && response.data.token) {
-      console.log('HaloWiFi token fetched successfully.');
+      //console.log('HaloWiFi token fetched successfully. ||', response.data.token );
       return response.data.token;
     } else {
       console.error('Unexpected response format:', response.data);

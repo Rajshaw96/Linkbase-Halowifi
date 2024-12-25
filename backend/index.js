@@ -9,33 +9,25 @@ const wifiRoutes = require('./routes/wifiRoutes');
 const functions = require("firebase-functions");
 const app = express();
 
-// Connect to MongoDB
 connectDB();
-
-// Security middleware
 app.use(helmet());
 app.use(express.json());
 
 // Configure CORS with allowed origins
-// const allowedOrigins = [
-//   'http://127.0.0.1:5500', 
-//   'https://linkbase.tech',
-//   'https://linkbase.tech/', 
-//   'https://linkbase-halowifi.web.app'
-// ];
+const allowedOrigins = [
+  'http://127.0.0.1:5500', 
+  'https://linkbase.tech',
+];
 
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
-
-// Test Route
-app.get("/", (req, res) => res.send("Hello from Firebase!"));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 // API Routes
 app.use('/propertiesDetails', propertyRoutes);
