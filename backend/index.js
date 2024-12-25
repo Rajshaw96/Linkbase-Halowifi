@@ -14,20 +14,20 @@ app.use(helmet());
 app.use(express.json());
 
 // Configure CORS with allowed origins
-const allowedOrigins = [
-  'http://127.0.0.1:5500', 
-  'https://linkbase.tech',
-];
+// const allowedOrigins = [
+//   'http://127.0.0.1:5500', 
+//   'https://linkbase.tech',
+// ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   }
+// }));
 
 // API Routes
 app.use('/propertiesDetails', propertyRoutes);
