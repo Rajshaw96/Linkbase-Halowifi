@@ -91,10 +91,7 @@ const triggerLogin = async (req, res) => {
     res.status(200).json({
       status: 'success',
       message: 'Session validated successfully.',
-      data: {
-        redirect_url: redirect_url || null,
-        user_id,
-      },
+      redirect_url: redirect_url || null,
     });
 
   } catch (error) {
