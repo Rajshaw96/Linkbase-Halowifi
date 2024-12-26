@@ -34,9 +34,9 @@ app.get("/", (req, res) => res.send("Hello from Firebase!"));
 
 
 // API Routes
-app.use('/propertiesDetails', propertyRoutes);
-app.use('/userConnect', connectRoutes);
-app.use('/connect/external', wifiRoutes);
+app.use('api/propertiesDetails', propertyRoutes);
+app.use('api/userConnect', connectRoutes);
+app.use('api/connect/external', wifiRoutes);
 
 // Firebase Function export
 exports.api = functions.https.onRequest(app);
