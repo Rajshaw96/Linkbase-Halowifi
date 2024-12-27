@@ -93,71 +93,50 @@ $("#loginBtn").on('click', function() {
 });
 
 
-// // Ensure the DOM is fully loaded before accessing elements
-document.addEventListener("DOMContentLoaded", () => {
-    const connectBtn = document.getElementById("connectBtn");
+document.getElementById("connectBtn").addEventListener("click", async () => {
 
-    // Check if the button exists
-    if (connectBtn) {
-        connectBtn.addEventListener("click", async () => {
-            const fullName = document.getElementById("fullName")?.value.trim() || "";
-            const phoneNo = document.getElementById("phoneNo")?.value.trim() || "";
-            const emailId = document.getElementById("emailId")?.value.trim() || "";
+    const fullName = document.getElementById("fullName").value.trim();
+    const phoneNo = document.getElementById("phoneNo").value.trim();
+    const emailId = document.getElementById("emailId").value.trim();
 
-            // Validate inputs
-            if (!fullName || !phoneNo || !emailId) {
-                alert("Please fill in all the fields.");
-                return;
-            }
+    // Create a data object to send to the API
+    const requestData = {
+        UserFullName: fullName,    // Matches backend field name
+        UserPhoneNo: phoneNo,      // Matches backend field name
+        UserEmailId: emailId,      // Matches backend field name
+    };
 
-            // Create a data object to send to the API
-            const requestData = {
-                UserFullName: fullName, // Matches backend field name
-                UserPhoneNo: phoneNo,   // Matches backend field name
-                UserEmailId: emailId,   // Matches backend field name
-            };
+    // API URL
+    const apiUrl = APP_API+'/userConnect';
 
-            // Ensure APP_API is defined
-            if (!APP_API) {
-                console.error("APP_API is not defined.");
-                alert("Application error. Please contact support.");
-                return;
-            }
-
-            const apiUrl = `${APP_API}/userConnect`;
-
-            try {
-                // Make the API call using fetch
-                const response = await fetch(apiUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(requestData),
-                });
-
-                // Check for HTTP errors
-                if (!response.ok) {
-                    const errorDetails = await response.json();
-                    throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
-                }
-
-                // Parse the response
-                const responseData = await response.json();
-
-                // Alert success message
-                alert("Data successfully added!!");
-                console.log("Response:", responseData);
-
-                // Clear input fields after successful submission
-                document.getElementById("fullName").value = "";
-                document.getElementById("phoneNo").value = "";
-                document.getElementById("emailId").value = "";
-            } catch (error) {
-                // Handle errors
-                console.error("Error:", error);
-                alert(`An error occurred: ${error.message}. Please try again.`);
-            }
+    try {
+        // Make the API call using fetch
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestData),
         });
-    } else {
-        console.error("Element with id 'connectBtn' not found.");
+
+        // Check for HTTP errors
+        if (!response.ok) {
+            const errorDetails = await response.json();
+            throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the response
+        const responseData = await response.json();
+
+        // Alert success message
+        alert("Data successfully added!!");
+        console.log("Response:", responseData);
+
+        // Clear input fields after successful submission
+        document.getElementById("fullName").value = "";
+        document.getElementById("phoneNo").value = "";
+        document.getElementById("emailId").value = "";
+    } catch (error) {
+        // Handle errors
+        console.error("Error:", error);
+        alert(`An error occurred: ${error.message}. Please try again.`);
     }
 });

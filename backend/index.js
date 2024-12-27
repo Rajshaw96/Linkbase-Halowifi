@@ -38,7 +38,7 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  methods: "GET,PUT,POST,DELETE",
   credentials: true, // VERY IMPORTANT for cookies/auth
   optionsSuccessStatus: 204,
 };

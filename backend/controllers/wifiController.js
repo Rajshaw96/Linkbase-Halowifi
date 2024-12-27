@@ -49,6 +49,7 @@ const triggerLogin = async (req, res) => {
     }
 
     // Trigger external API login
+    console.log('Fetching authentication token...', {login_app_id});
     const response = await axios.post(
       process.env.EXTERNAL_TRIGGER_API_URL,
       {
