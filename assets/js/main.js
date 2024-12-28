@@ -83,7 +83,7 @@ $("#loginBtn").on('click', function() {
         data: login_data,
         success: function(response) {
             console.log(response);
-            alert("Login url:: "+response.redirect_url);
+            //alert("Login url:: "+response.redirect_url);
             // redirect the user to the url provided in the response
             window.location.href = response.redirect_url;
         },
@@ -94,8 +94,8 @@ $("#loginBtn").on('click', function() {
 });
 
 
-document.getElementById("connectBtn").addEventListener("click", async () => {
-
+// Method to handle user connection and save data offline if no internet
+async function handleUserConnect() {
     const fullName = document.getElementById("fullName").value.trim();
     const phoneNo = document.getElementById("phoneNo").value.trim();
     const emailId = document.getElementById("emailId").value.trim();
@@ -108,36 +108,88 @@ document.getElementById("connectBtn").addEventListener("click", async () => {
     };
 
     // API URL
-    const apiUrl = APP_API+'/userConnect';
+    const apiUrl = APP_API + '/userConnect';
 
     try {
-        // Make the API call using fetch
-        const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestData),
-        });
+        // Check for internet connection
+        if (navigator.onLine) {
+            // If online, send data to the server
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+            });
 
-        // Check for HTTP errors
-        if (!response.ok) {
-            const errorDetails = await response.json();
-            throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+            // Check for HTTP errors
+            if (!response.ok) {
+                const errorDetails = await response.json();
+                throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+            }
+
+            // Parse the response
+            const responseData = await response.json();
+
+            // Alert success message
+            //alert("Data successfully added!");
+            console.log("Data successfully added!");
+            console.log("Response:", responseData);
+
+            // Clear input fields after successful submission
+            document.getElementById("fullName").value = "";
+            document.getElementById("phoneNo").value = "";
+            document.getElementById("emailId").value = "";
+
+        } else {
+            // If offline, store the data in local storage for later sync
+            const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
+            offlineData.push(requestData);
+            localStorage.setItem("offlineData", JSON.stringify(offlineData));
+
+            alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
         }
-
-        // Parse the response
-        const responseData = await response.json();
-
-        // Alert success message
-        alert("Data successfully added!!");
-        console.log("Response:", responseData);
-
-        // Clear input fields after successful submission
-        document.getElementById("fullName").value = "";
-        document.getElementById("phoneNo").value = "";
-        document.getElementById("emailId").value = "";
     } catch (error) {
         // Handle errors
         console.error("Error:", error);
         alert(`An error occurred: ${error.message}. Please try again.`);
     }
-});
+}
+
+// Method to send offline data once internet is back
+async function syncOfflineData() {
+    if (navigator.onLine) {
+        const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
+
+        if (offlineData.length > 0) {
+            const apiUrl = APP_API + '/userConnect';
+            try {
+                // Loop through all offline data and send it to the server
+                for (let data of offlineData) {
+                    const response = await fetch(apiUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                    });
+
+                    if (!response.ok) {
+                        const errorDetails = await response.json();
+                        console.error("Error sending data:", errorDetails);
+                    } else {
+                        console.log("Offline data synced successfully:", data);
+                    }
+                }
+
+                // Clear offline data from local storage after successful sync
+                localStorage.removeItem("offlineData");
+
+            } catch (error) {
+                console.error("Error syncing offline data:", error);
+            }
+        }
+    }
+}
+
+// Event listener for connect button
+document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
+
+// Listen for online status change and attempt to sync offline data
+window.addEventListener("online", syncOfflineData);
