@@ -7,6 +7,7 @@ const triggerLogin = async (req, res) => {
     location_id,
     network_id,
     session_id,
+    login_app_id,
     session_duration,
     bandwidth,
     login_username,
@@ -15,8 +16,6 @@ const triggerLogin = async (req, res) => {
     last_name,
     email,
   } = req.body;
-
-  const login_app_id = process.env.LOGIN_APP_ID; // Get login_app_id from environment variables
 
   // Validate request parameters
   if (!location_id || !network_id || !session_id || !login_app_id) {
