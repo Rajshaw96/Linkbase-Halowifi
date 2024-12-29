@@ -22,10 +22,10 @@ const validateRequestBody = (req, res, next) => {
 };
 
 // Routes
-router.get('/', guestConnectController.getAllGuestConnections); // GET all guest connections
-router.get('/:id', validateId, guestConnectController.getGuestConnectionById); // GET guest connection by ID
-router.post('/', validateRequestBody, guestConnectController.createGuestConnection); // POST (Create) - Token required
-router.put('/:id', validateId, validateRequestBody, guestConnectController.updateGuestConnection); // PUT (Update) - Token required
-router.delete('/:id', validateId, guestConnectController.deleteGuestConnection); // DELETE (Delete) - Token required
+router.get('/', guestConnectController.getAllGuestConnections);
+router.get('/:id', validateId, guestConnectController.getGuestConnectionById);
+router.post('/', validateRequestBody, guestConnectController.createGuestConnection);
+router.put('/:id', validateId, validateRequestBody, guestConnectController.updateGuestConnection);
+router.delete('/:id', validateId, guestConnectController.deleteGuestConnection);
 
 module.exports = router;
