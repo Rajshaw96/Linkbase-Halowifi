@@ -126,6 +126,20 @@ exports.updateGuestConnection = async (req, res) => {
   }
 };
 
+// Delete a guest connection by ID
+exports.deleteGuestConnection = async (req, res) => {
+  try {
+    const deletedGuestConnection = await GuestConnect.findByIdAndDelete(req.params.id);
+    if (!deletedGuestConnection) {
+      return res.status(404).json({ message: 'Guest connection not found' });
+    }
+    res.json({ message: 'Guest connection deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting guest connection:', err);
+    res.status(500).json({ message: 'Server error, unable to delete guest connection' });
+  }
+};
+
 // Export guest connections as Excel
 exports.exportGuestConnectionsExcel = async (req, res) => {
   try {

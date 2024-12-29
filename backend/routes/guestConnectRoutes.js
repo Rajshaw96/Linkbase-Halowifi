@@ -24,6 +24,9 @@ const validateRequestBody = (req, res, next) => {
 // Routes
 router.get('/', guestConnectController.getAllGuestConnections);
 router.get('/:id', validateId, guestConnectController.getGuestConnectionById);
+router.get('/export-excel', guestConnectController.exportGuestConnectionsExcel);
+router.get('/export-csv', guestConnectController.exportGuestConnectionsCSV);
+router.get('/export-pdf', guestConnectController.exportGuestConnectionsPDF);
 router.post('/', validateRequestBody, guestConnectController.createGuestConnection);
 router.put('/:id', validateId, validateRequestBody, guestConnectController.updateGuestConnection);
 router.delete('/:id', validateId, guestConnectController.deleteGuestConnection);
