@@ -127,12 +127,12 @@ async function handleUserConnect() {
             }
 
             // Parse the response
-            const responseData = await response.json();
+            //const responseData = await response.json();
 
             // Alert success message
             //alert("Data successfully added!");
-            console.log("Data successfully added!");
-            console.log("Response:", responseData);
+            //console.log("Data successfully added!");
+            //console.log("Response:", responseData);
 
             // Clear input fields after successful submission
             document.getElementById("fullName").value = "";
@@ -144,11 +144,9 @@ async function handleUserConnect() {
             const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
             offlineData.push(requestData);
             localStorage.setItem("offlineData", JSON.stringify(offlineData));
-
-            alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
+            //alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
         }
     } catch (error) {
-        // Handle errors
         console.error("Error:", error);
         alert(`An error occurred: ${error.message}. Please try again.`);
     }
@@ -174,7 +172,7 @@ async function syncOfflineData() {
                         const errorDetails = await response.json();
                         console.error("Error sending data:", errorDetails);
                     } else {
-                        console.log("Offline data synced successfully:", data);
+                        //console.log("Offline data synced successfully:", data);
                     }
                 }
 

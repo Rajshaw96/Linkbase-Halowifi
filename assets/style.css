@@ -161,17 +161,25 @@ button:not(:disabled):active {
 }
 
 .modal-title {
+    margin: 0;
     font-size: 1.25rem;
     color: #f1f5f9;
 }
 
+.modal-header-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .close-button {
-    background: none;
     border: none;
     color: #94a3b8;
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
+    width: 60px;
 }
 
 .close-button:hover {

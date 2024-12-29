@@ -102,7 +102,6 @@
   
     // Disable keyboard shortcuts
     document.addEventListener('keydown', function (e) {
-      // Prevent F12
       if (e.key === "F12" || e.code === "F12") {
         e.preventDefault();
         return false;
@@ -133,7 +132,6 @@
       devtools.toString = function () {
         clearInterval(blockDevTools);
       };
-      console.log(devtools);
     }, 1000);
   
     // Alternative: disable access to document
