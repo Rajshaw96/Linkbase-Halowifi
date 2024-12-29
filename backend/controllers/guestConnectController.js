@@ -200,8 +200,14 @@ exports.exportGuestConnectionsExcel = async (req, res) => {
 // Export guest connections as CSV
 exports.exportGuestConnectionsCSV = async (req, res) => {
   try {
-    const guestConnections = await GuestConnect.find();
+    // Fetch all guest connections
+    const guestConnections = await GuestConnect.find().lean(); // Use lean() to return plain objects
 
+    if (!guestConnections || guestConnections.length === 0) {
+      return res.status(404).json({ message: 'No guest connections found to export.' });
+    }
+
+    // Map the data to the required format
     const csvData = await writeToBuffer(
       guestConnections.map((connection) => ({
         guestFullName: connection.guestFullName,
@@ -209,10 +215,13 @@ exports.exportGuestConnectionsCSV = async (req, res) => {
         guestEmailId: connection.guestEmailId,
         propertyLocationId: connection.propertyLocationId,
         propertyNetworkId: connection.propertyNetworkId,
+        createdAt: connection.createdAt,
+        updatedAt: connection.updatedAt,
       })),
       { headers: true }
     );
 
+    // Set response headers and send CSV
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="guest_connections.csv"');
     res.send(csvData);

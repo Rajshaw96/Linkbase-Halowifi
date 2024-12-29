@@ -9,7 +9,6 @@ const SplashPageSchema = new mongoose.Schema(
     propertySplashPageDescription: String,
   },
   { 
-    versionKey: false,  // This disables the `__v` field
     timestamps: true    // This automatically adds `createdAt` and `updatedAt`
   }
 );
@@ -17,8 +16,6 @@ const SplashPageSchema = new mongoose.Schema(
 // Alternatively, exclude `__v` when converting to JSON
 SplashPageSchema.set('toJSON', {
   transform: (doc, ret) => {
-    ret.id = ret._id; // Rename _id to id
-    delete ret._id;   // Optionally remove _id field
     delete ret.__v; // Remove the `__v` field when returning the document
     return ret;
   },

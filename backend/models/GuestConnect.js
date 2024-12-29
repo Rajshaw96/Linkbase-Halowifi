@@ -39,16 +39,12 @@ const GuestConnectSchema = new mongoose.Schema(
     },
   },
   {
-    versionKey: false, // Disables the `__v` field
     timestamps: true,  // Automatically adds `createdAt` and `updatedAt` fields
   }
 );
 
-// Exclude MongoDB-specific fields (`_id` and `__v`) from JSON responses
 GuestConnectSchema.set('toJSON', {
   transform: (doc, ret) => {
-    ret.id = ret._id; // Rename _id to id
-    delete ret._id;   // Remove _id field
     delete ret.__v;   // Remove __v field
     return ret;
   },
