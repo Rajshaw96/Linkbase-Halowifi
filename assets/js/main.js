@@ -100,11 +100,16 @@ async function handleUserConnect() {
     const phoneNo = document.getElementById("phoneNo").value.trim();
     const emailId = document.getElementById("emailId").value.trim();
 
+    // Extract location_id from the URL
+    const params = new URLSearchParams(window.location.search);
+    const location_id = params.get('location_id');
+
     // Create a data object to send to the API
     const requestData = {
         UserFullName: fullName,    // Matches backend field name
         UserPhoneNo: phoneNo,      // Matches backend field name
         UserEmailId: emailId,      // Matches backend field name
+        LocationId: location_id,   // Matches backend field name
     };
 
     // API URL

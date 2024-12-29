@@ -2,9 +2,9 @@ const { Connect, validateConnect } = require('../models/Connect');
 
 // Helper function to check if required fields are present
 const validateConnectionFields = (req) => {
-  const { UserFullName, UserPhoneNo, UserEmailId } = req.body;
-  if (!UserFullName || !UserPhoneNo || !UserEmailId) {
-    return 'All fields are required: UserFullName, UserPhoneNo, UserEmailId';
+  const { UserFullName, UserPhoneNo, UserEmailId, LocationId } = req.body;
+  if (!UserFullName || !UserPhoneNo || !UserEmailId || !LocationId) {
+    return 'All fields are required: UserFullName, UserPhoneNo, UserEmailId, LocationId';
   }
   return null;
 };

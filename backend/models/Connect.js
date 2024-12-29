@@ -28,6 +28,11 @@ const ConnectSchema = new mongoose.Schema(
       unique: true,
       match: [/\S+@\S+\.\S+/, 'Please enter a valid email address'],
     },
+    LocationId: {
+      type: String,
+      required: true,
+      minlength: 3,
+    }
   },
   {
     versionKey: false, // This disables the `__v` field
