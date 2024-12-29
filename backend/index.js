@@ -4,7 +4,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const helmet = require('helmet');
 const propertyRoutes = require('./routes/propertyRoutes');
-const connectRoutes = require('./routes/connectRoutes');
+const guestConnectRoutes = require('./routes/guestConnectRoutes');
 const wifiRoutes = require('./routes/wifiRoutes');
 const functions = require("firebase-functions");
 
@@ -24,9 +24,8 @@ app.use(express.json());
 // Get allowed origins from environment (BEST PRACTICE)
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [
   'http://127.0.0.1:5500',
-  'http://localhost:5500',
   'https://linkbase.tech/?',
-  'https://linkbase.tech', // Make absolutely sure this is correct
+  'https://linkbase.tech',
 ];
 
 const corsOptions = {
@@ -50,7 +49,7 @@ app.get("/", (req, res) => res.send("Hello from Firebase!"));
 
 // API Routes
 app.use('/propertiesDetails', propertyRoutes);
-app.use('/userConnect', connectRoutes);
+app.use('/guestConnect', guestConnectRoutes);
 app.use('/connect/external', wifiRoutes);
 
 // Firebase Function export
