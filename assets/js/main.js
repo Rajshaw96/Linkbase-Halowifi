@@ -96,9 +96,9 @@ $("#loginBtn").on('click', function() {
 
 // Method to handle user connection and save data offline if no internet
 async function handleUserConnect() {
-    const fullName = document.getElementById("fullName").value.trim();
-    const phoneNo = document.getElementById("phoneNo").value.trim();
-    const emailId = document.getElementById("emailId").value.trim();
+    const guestFullName = document.getElementById("guestFullName").value.trim();
+    const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
+    const guestEmailId = document.getElementById("guestEmailId").value.trim();
 
     // Extract location_id from the URL
     const params = new URLSearchParams(window.location.search);
@@ -106,14 +106,15 @@ async function handleUserConnect() {
 
     // Create a data object to send to the API
     const requestData = {
-        UserFullName: fullName,    // Matches backend field name
-        UserPhoneNo: phoneNo,      // Matches backend field name
-        UserEmailId: emailId,      // Matches backend field name
-        LocationId: location_id,   // Matches backend field name
+        guestFullName: guestFullName,    // Matches backend field name
+        guestPhoneNo: guestPhoneNo,      // Matches backend field name
+        guestEmailId: guestEmailId,      // Matches backend field name
+        propertyLocationId: location_id,   // Matches backend field name
+        propertyNetworkId: location_id,   // Matches backend field name
     };
 
     // API URL
-    const apiUrl = APP_API + '/userConnect';
+    const apiUrl = APP_API + '/guestConnect';
 
     try {
         // Check for internet connection
