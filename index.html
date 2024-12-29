@@ -21,20 +21,17 @@
                 <input type="email" id="emailId" placeholder="Enter Your Email Id">
             </form>
         </div>
-        <div class="terms-container hidden">
+        <div class="terms-container">
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="terms">
                 <label for="terms">
-                    I agree to the <a href="#" id="tosModalTitle">Terms of Service</a> and 
-                    <a href="#" id="privacyModalTitle">Privacy Policy</a>
+                    I agree to the <a href="#" id="tosModalTitle">Terms</a> & <a href="#" id="privacyModalTitle">Privacy Policy</a>
                 </label>
             </div>
-            
-            <!-- <div id="loginRequestMalformed" >
-                <p>Login request is malformed. Please check our <a href="https://one.halowifi.com/developers/api-documentation" target="_blank" rel="noopener noreferrer">documentation</a>, 
-                    <a href="https://one.halowifi.com/user/support" target="_blank" rel="noopener noreferrer">raise a ticket</a> with us, or 
-                    <a href="mailto:hello@halowifi.com">email our support team</a>.</p>
-            </div> -->
+        
+            <div id="loginRequestMalformed" class="hidden">
+                Please check the available Wi-Fi networks and select your preferred one. For more details, feel free to <a href="mailto:support@linkbase.ca">Contact Us!!</a>.
+            </div>
         </div>
         <button id="loginBtn" disabled>Continue to Login</button>
     </main>
