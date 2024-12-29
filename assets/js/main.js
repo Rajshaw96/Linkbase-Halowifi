@@ -100,17 +100,18 @@ async function handleUserConnect() {
     const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
     const guestEmailId = document.getElementById("guestEmailId").value.trim();
 
-    // Extract location_id from the URL
+    // Extract location_id & network_id from the URL
     const params = new URLSearchParams(window.location.search);
     const location_id = params.get('location_id');
+    const network_id = params.get('network_id');
 
     // Create a data object to send to the API
     const requestData = {
-        guestFullName: guestFullName,    // Matches backend field name
-        guestPhoneNo: guestPhoneNo,      // Matches backend field name
-        guestEmailId: guestEmailId,      // Matches backend field name
-        propertyLocationId: location_id,   // Matches backend field name
-        propertyNetworkId: location_id,   // Matches backend field name
+        guestFullName: guestFullName,    
+        guestPhoneNo: guestPhoneNo,      
+        guestEmailId: guestEmailId,      
+        propertyLocationId: location_id,   
+        propertyNetworkId: network_id,   
     };
 
     // API URL
