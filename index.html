@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linkbase | Splash Page</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" href="assets/image/favicon-icon.png" type="image/x-icon">
 </head>
 <body>
@@ -19,11 +19,9 @@
                 <input type="text" id="fullName" placeholder="Enter Your Full Name">
                 <input type="text" id="phoneNo" placeholder="Enter Your Phone No">
                 <input type="email" id="emailId" placeholder="Enter Your Email Id">
-                
-                <!-- <button  id="connectBtn" type="button">Submit</button> -->
             </form>
         </div>
-        <div class="terms-container">
+        <div class="terms-container hidden">
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="terms">
                 <label for="terms">
@@ -32,11 +30,11 @@
                 </label>
             </div>
             
-            <div id="loginRequestMalformed" class="hidden">
-                <p>Login request is malformed. Please check our <a href="https://one.halowifi.com/developers/api-documentation" target="_blank">documentation</a>, 
-                    <a href="https://one.halowifi.com/user/support" target="_blank">raise a ticket</a> with us, or 
+            <!-- <div id="loginRequestMalformed" >
+                <p>Login request is malformed. Please check our <a href="https://one.halowifi.com/developers/api-documentation" target="_blank" rel="noopener noreferrer">documentation</a>, 
+                    <a href="https://one.halowifi.com/user/support" target="_blank" rel="noopener noreferrer">raise a ticket</a> with us, or 
                     <a href="mailto:hello@halowifi.com">email our support team</a>.</p>
-            </div>
+            </div> -->
         </div>
         <button id="loginBtn" disabled>Continue to Login</button>
     </main>
@@ -72,9 +70,9 @@
             </div>
         </div>
     </div>
-    <!-- <footer class="powered-by">
-        <p>Powered by <a href="https://halowifi.com" target="_blank">HaloWiFi</a></p>
-    </footer> -->
+    <footer class="powered-by">
+        <p>Powered by <a href="https://linkbase.ca/" target="_blank" rel="noopener noreferrer">Linkbase Technologies Inc!</a></p>
+    </footer>
     <script src="assets/js/jquery-3.5.0.min.js"></script>
     <script src="assets/js/config.js"></script>
     <script src="assets/js/main.js?v=12"></script>
