@@ -140,11 +140,28 @@ exports.deleteGuestConnection = async (req, res) => {
   }
 };
 
-// Export guest connections as Excel
+// Export guest connections with pagination and search
 exports.exportGuestConnectionsExcel = async (req, res) => {
   try {
-    const guestConnections = await GuestConnect.find();
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const skip = (page - 1) * limit;
+    const regexSearch = new RegExp(search, 'i'); // Case-insensitive search
 
+    // Fetch guest connections with search and pagination
+    const guestConnections = await GuestConnect.find({
+      $or: [
+        { guestFullName: { $regex: regexSearch } },
+        { guestPhoneNo: { $regex: regexSearch } },
+        { guestEmailId: { $regex: regexSearch } },
+        { propertyLocationId: { $regex: regexSearch } },
+        { propertyNetworkId: { $regex: regexSearch } },
+      ]
+    })
+    .skip(skip)
+    .limit(parseInt(limit))
+    .exec();
+
+    // Create Excel workbook
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Guest Connections');
 
@@ -157,18 +174,25 @@ exports.exportGuestConnectionsExcel = async (req, res) => {
       { header: 'Property Network ID', key: 'propertyNetworkId', width: 20 },
     ];
 
-    // Add data
+    // Add rows of data to Excel sheet
     guestConnections.forEach((connection) => {
-      worksheet.addRow(connection);
+      worksheet.addRow({
+        guestFullName: connection.guestFullName,
+        guestPhoneNo: connection.guestPhoneNo,
+        guestEmailId: connection.guestEmailId,
+        propertyLocationId: connection.propertyLocationId,
+        propertyNetworkId: connection.propertyNetworkId,
+      });
     });
 
-    // Write the file and send it as a response
+    // Write the file buffer and send as response
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename="guest_connections.xlsx"');
     res.send(buffer);
+
   } catch (error) {
-    console.error('Error exporting to Excel:', error);
+    console.error('Error exporting guest connections:', error);
     res.status(500).json({ message: 'Error exporting to Excel' });
   }
 };
