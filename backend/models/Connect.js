@@ -56,6 +56,7 @@ const validateConnect = (data) => {
     UserFullName: Joi.string().required().min(3),
     UserPhoneNo: Joi.string().pattern(/^[0-9]{10}$/).required(),
     UserEmailId: Joi.string().email().required(),
+    LocationId: Joi.string().required().min(3),
   });
   return schema.validate(data);
 };
