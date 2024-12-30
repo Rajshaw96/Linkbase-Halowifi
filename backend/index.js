@@ -7,11 +7,14 @@ const propertyRoutes = require('./routes/propertyRoutes');
 const guestConnectRoutes = require('./routes/guestConnectRoutes');
 const wifiRoutes = require('./routes/wifiRoutes');
 const functions = require("firebase-functions");
+const logger = require('./logger/logger');  // Import the logger
 
 const app = express();
 
 // Connect to the database (MongoDB)
-connectDB();
+connectDB()
+  .then(() => logger.info('MongoDB connected successfully'))  // Log database connection success
+  .catch((err) => logger.error(`MongoDB connection error: ${err.message}`));  // Log database connection errors
 
 // Security Best Practices (Improved with Helmet)
 app.use(helmet({
@@ -36,7 +39,7 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error("CORS blocked request from origin:", origin);
+      logger.error(`CORS blocked request from origin: ${origin}`);  // Log blocked CORS requests
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -49,12 +52,36 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Test Route (Useful for testing the server is running)
-app.get("/", (req, res) => res.send("Hello from Firebase!")); // You can remove this later if needed
+app.get("/", (req, res) => {
+  logger.info('Root route accessed');  // Log root route access
+  res.send("Hello from Firebase!");
+});
 
 // API Routes (Adding various routes for your app)
 app.use('/propertiesDetails', propertyRoutes);  // Route for property details
 app.use('/guestConnect', guestConnectRoutes);  // Route for guest connections
 app.use('/connect/external', wifiRoutes);      // Route for external Wi-Fi connection
 
+// Log when each route is accessed
+app.use('/propertiesDetails', (req, res, next) => {
+  logger.info(`Request to /propertiesDetails: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+app.use('/guestConnect', (req, res, next) => {
+  logger.info(`Request to /guestConnect: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+app.use('/connect/external', (req, res, next) => {
+  logger.info(`Request to /connect/external: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 // Firebase Function export (Firebase will use this to handle HTTP requests)
 exports.api = functions.https.onRequest(app);
+
+// Log server startup
+// app.listen(process.env.PORT || 5900, () => {
+//   logger.info(`Server is running on port ${process.env.PORT || 5000}`);
+// });
