@@ -9,14 +9,14 @@ const SplashPageSchema = new mongoose.Schema(
     propertySplashPageDescription: String,
   },
   { 
-    timestamps: true    // This automatically adds `createdAt` and `updatedAt`
+    timestamps: true
   }
 );
 
 // Alternatively, exclude `__v` when converting to JSON
 SplashPageSchema.set('toJSON', {
   transform: (doc, ret) => {
-    delete ret.__v; // Remove the `__v` field when returning the document
+    delete ret.__v;
     return ret;
   },
 });
