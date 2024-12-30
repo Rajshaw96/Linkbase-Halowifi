@@ -4,11 +4,6 @@ const Joi = require('joi');
 // Define the schema for guest connections
 const GuestConnectSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-      default: () => new mongoose.Types.ObjectId().toString(),
-    },
     guestFullName: {
       type: String,
       required: true,
