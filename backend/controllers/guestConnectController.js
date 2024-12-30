@@ -1,7 +1,16 @@
-const { GuestConnect } = require('../models/GuestConnect');
+const { GuestConnect, validateGuestConnect } = require('../models/GuestConnect');
 const ExcelJS = require('exceljs');
 const { writeToBuffer } = require('@fast-csv/format');
 const PDFDocument = require('pdfkit');
+
+// Helper function to check if required fields are present
+const validateGuestConnectFields = (req) => {
+  const { guestFullName, guestPhoneNo, guestEmailId, propertyLocationId, propertyNetworkId } = req.body;
+  if (!guestFullName || !guestPhoneNo || !guestEmailId || !propertyLocationId || !propertyNetworkId) {
+    return 'All fields are required';
+  }
+  return null;
+};
 
 // Get all guest connections with filtering, sorting, pagination, and search
 exports.getAllGuestConnections = async (req, res) => {
@@ -9,7 +18,7 @@ exports.getAllGuestConnections = async (req, res) => {
     // Extract query parameters
     const { page = 1, limit = 10, sort = 'guestFullName', order = 'asc', search = '', ...filters } = req.query;
 
-    // Build query object for filtering and search
+    // Search and filter logic
     const query = {
       ...filters,
       ...(search && {
@@ -23,15 +32,13 @@ exports.getAllGuestConnections = async (req, res) => {
       }),
     };
 
-    console.log('Constructed Query:', query);
-
     // Sorting logic
     const sortOrder = order === 'desc' ? -1 : 1;
 
     // Pagination logic
-    const skip = (page - 1) * parseInt(limit);
+    const skip = (page - 1) * limit;
 
-    // Fetch data with filters, search, sorting, and pagination
+    // Execute query with filters, search, sort, and pagination
     const guestConnections = await GuestConnect.find(query)
       .sort({ [sort]: sortOrder })
       .skip(skip)
@@ -39,8 +46,6 @@ exports.getAllGuestConnections = async (req, res) => {
 
     // Count total documents for pagination metadata
     const totalDocuments = await GuestConnect.countDocuments(query);
-
-    console.log('Guest connections fetched successfully:', guestConnections);
 
     res.json({
       data: guestConnections,
@@ -51,7 +56,7 @@ exports.getAllGuestConnections = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error fetching guest connections:', error.message, error.stack);
+    console.error('Error fetching guest connections:', error);
     res.status(500).json({ message: 'Error fetching guest connections' });
   }
 };
@@ -59,20 +64,30 @@ exports.getAllGuestConnections = async (req, res) => {
 // Get guest connection by ID
 exports.getGuestConnectionById = async (req, res) => {
   try {
-    const guestConnection = await GuestConnect.findById(req.params.id).select('-__v'); // Exclude __v field
+    const guestConnection = await GuestConnect.findById(req.params.id).select('-__v'); // Exclude the __v field
     if (!guestConnection) {
       return res.status(404).json({ message: 'Guest connection not found' });
     }
     res.json(guestConnection);
-  } catch (error) {
-    console.error(`Error fetching guest connection with ID ${req.params.id}:`, error.message, error.stack);
+  } catch (err) {
+    console.error(`Error fetching guest connection with ID ${req.params.id}:`, err);
     res.status(500).json({ message: 'Server error, unable to fetch guest connection' });
   }
 };
 
 // Create a new guest connection
 exports.createGuestConnection = async (req, res) => {
+  const validationError = validateGuestConnectFields(req);
+  if (validationError) {
+    return res.status(400).json({ message: validationError });
+  }
+
   try {
+    const { error } = validateGuestConnect(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details.map((e) => e.message).join(', ') });
+    }
+
     const existingGuestConnection = await GuestConnect.findOne({ guestEmailId: req.body.guestEmailId });
     if (existingGuestConnection) {
       return res.status(409).json({ message: 'Email already in use' });
@@ -80,25 +95,33 @@ exports.createGuestConnection = async (req, res) => {
 
     const newGuestConnection = new GuestConnect(req.body);
     const savedGuestConnection = await newGuestConnection.save();
-    console.log('New guest connection created:', savedGuestConnection);
     res.status(201).json(savedGuestConnection);
-  } catch (error) {
-    console.error('Error creating guest connection:', error.message, error.stack);
+  } catch (err) {
+    console.error('Error creating guest connection:', err);
     res.status(500).json({ message: 'Server error, unable to create guest connection' });
   }
 };
 
 // Update a guest connection by ID
 exports.updateGuestConnection = async (req, res) => {
+  const validationError = validateGuestConnectFields(req);
+  if (validationError) {
+    return res.status(400).json({ message: validationError });
+  }
+
   try {
+    const { error } = validateGuestConnect(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details.map((e) => e.message).join(', ') });
+    }
+
     const updatedGuestConnection = await GuestConnect.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedGuestConnection) {
       return res.status(404).json({ message: 'Guest connection not found' });
     }
-    console.log('Guest connection updated:', updatedGuestConnection);
     res.json(updatedGuestConnection);
-  } catch (error) {
-    console.error('Error updating guest connection:', error.message, error.stack);
+  } catch (err) {
+    console.error('Error updating guest connection:', err);
     res.status(500).json({ message: 'Server error, unable to update guest connection' });
   }
 };
@@ -110,14 +133,12 @@ exports.deleteGuestConnection = async (req, res) => {
     if (!deletedGuestConnection) {
       return res.status(404).json({ message: 'Guest connection not found' });
     }
-    console.log('Guest connection deleted:', deletedGuestConnection);
     res.json({ message: 'Guest connection deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting guest connection:', error.message, error.stack);
+  } catch (err) {
+    console.error('Error deleting guest connection:', err);
     res.status(500).json({ message: 'Server error, unable to delete guest connection' });
   }
 };
-
 
 // Export guest connections with pagination and search
 exports.exportGuestConnectionsExcel = async (req, res) => {
