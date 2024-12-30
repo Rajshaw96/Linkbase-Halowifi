@@ -1,5 +1,4 @@
 const axios = require('axios');
-const Session = require('../models/Session');
 const getHaloWiFiToken = require('../utils/haloWiFiToken');
 
 const triggerLogin = async (req, res) => {
