@@ -4,7 +4,7 @@ const axios = require("axios");
 const getHaloWiFiToken = require("../utils/haloWiFiToken");
 
 // Get Locations API
-router.get("/locations", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     // Fetch the token using the existing method
     const token = await getHaloWiFiToken();

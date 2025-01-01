@@ -7,7 +7,8 @@ const propertyRoutes = require('./routes/propertyRoutes');
 const guestConnectRoutes = require('./routes/guestConnectRoutes');
 const wifiRoutes = require('./routes/wifiRoutes');
 const functions = require("firebase-functions");
-const logger = require('./logger/logger');  // Import the logger
+const logger = require('./logger/logger');
+const locationsRoute = require('./routes/locations');
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.get("/", (req, res) => {
 app.use('/propertiesDetails', propertyRoutes);  // Route for property details
 app.use('/guestConnect', guestConnectRoutes);  // Route for guest connections
 app.use('/connect/external', wifiRoutes);      // Route for external Wi-Fi connection
+app.use('/locations', locationsRoute);
 
 // Log when each route is accessed
 app.use('/propertiesDetails', (req, res, next) => {
