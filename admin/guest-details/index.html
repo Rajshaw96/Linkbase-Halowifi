@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Data Table</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="table-header">
+        <h2>Data List</h2>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search">
+            <div class="icon-buttons">
+                <button title="Refresh" id="refreshButton">&#8635;</button>
+                <select class="export-dropdown" id="exportDropdown">
+                    <option value="" disabled selected>Export</option>
+                    <option value="excel">Export to Excel</option>
+                    <option value="csv">Export to CSV</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th data-sort="guestFullName">Full Name</th>
+                <th data-sort="guestPhoneNo">Phone Number</th>
+                <th data-sort="guestEmailId">Email</th>
+                <th data-sort="propertyLocationId">Location</th>
+                <th data-sort="createdAt">Created At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="guestTable">
+            <!-- Table rows will be dynamically inserted here -->
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span id="totalCount">Total Records: 0</span>
+        <div class="pagination-controls">
+            <button id="prevPage">&lt;</button>
+            <span id="pageInfo">Page 1 of 1</span>
+            <button id="nextPage">&gt;</button>
+        </div>
+    </div>
+</div>
+<script src="./script.js"></script>
+</body>
+</html>
