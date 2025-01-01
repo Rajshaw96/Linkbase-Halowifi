@@ -4,13 +4,13 @@ const axios = require("axios");
 const getHaloWiFiToken = require("../utils/haloWiFiToken");
 
 // Get Locations API
-router.get("/", async (req, res) => {
+router.get("/getAllLocations", async (req, res) => {
   try {
     // Fetch the token using the existing method
     const token = await getHaloWiFiToken();
 
     // Call the external API to fetch locations
-    const response = await axios.get(EXTERNAL_API_URL + "/locations", {
+    const response = await axios.get(EXTERNAL_API_URL + "/api/locations", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
