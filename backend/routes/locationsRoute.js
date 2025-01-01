@@ -10,7 +10,7 @@ router.get("/getAllLocations", async (req, res) => {
     const token = await getHaloWiFiToken();
 
     // Call the external API to fetch locations
-    const response = await axios.get(EXTERNAL_API_URL + "/api/locations", {
+    const response = await axios.get(process.env.EXTERNAL_API_URL + "/api/locations", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
