@@ -191,7 +191,7 @@ document.getElementById("loginBtn").addEventListener("click", handleUserConnect)
 // Listen for online status change and attempt to sync offline data
 window.addEventListener("online", syncOfflineData);
 
-// Extract location_id & network_id from the URL
+// Extract location_id from the URL
 const params = new URLSearchParams(window.location.search);
 const locationId = params.get('location_id');
 
@@ -233,19 +233,37 @@ async function fetchPropertyDetails(locationId) {
  * @param {Object} propertyDetails
  */
 function renderPropertyDetails(propertyDetails) {
-  const container = document.getElementById('propertyDetailsContainer');
+  const body = document.getElementById("body");
+  const logoImg = document.getElementById("logo-img");
+  const propertyName = document.getElementById("property-name");
+  const splashTitle = document.getElementById("splash-title");
+  const subtitle = document.getElementById("subtitle");
 
-  if (!container) {
-    console.error("Property details container element is missing.");
-    return;
+  // Set background image with a fallback color
+  const defaultBgColor = "linear-gradient(45deg, #0f172a, #1e293b);";
+  const bgImage = new Image();
+  bgImage.src = propertyDetails.propertyBackgroundImg;
+  bgImage.onload = () => {
+    body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
+    body.style.backgroundSize = "cover";
+    body.style.backgroundPosition = "center";
+  };
+  bgImage.onerror = () => {
+    body.style.backgroundColor = defaultBgColor;
+  };
+
+  // Update logo and property details
+  if (propertyDetails.propertyLogo) {
+    logoImg.src = propertyDetails.propertyLogo;
+  } else {
+    logoImg.alt = "Logo not available";
   }
 
-  container.innerHTML = `
-    <h3>Property Details</h3>
-    <p><strong>Location ID:</strong> ${propertyDetails.location_id || 'N/A'}</p>
-    <p><strong>Name:</strong> ${propertyDetails.name || 'N/A'}</p>
-    <p><strong>Address:</strong> ${propertyDetails.address || 'N/A'}</p>
-  `;
+  propertyName.textContent = propertyDetails.propertyName || "Linkbase";
+  splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
+  subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
+
+  console.log("Rendered property details successfully.");
 }
 
 // Initialize the fetch process
