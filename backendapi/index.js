@@ -31,7 +31,6 @@ app.use(express.json());
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [
   'http://127.0.0.1:5500',
   'http://127.0.0.1:5502',
-  'https://linkbase.tech/?',
   'https://linkbase.tech',
 ];
 
