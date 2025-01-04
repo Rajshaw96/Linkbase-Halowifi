@@ -191,9 +191,9 @@ document.getElementById("loginBtn").addEventListener("click", handleUserConnect)
 // Listen for online status change and attempt to sync offline data
 window.addEventListener("online", syncOfflineData);
 
-// Extract locationId from the URL path
-const urlParts = window.location.pathname.split('/');
-const locationId = urlParts[urlParts.indexOf('locationId') + 1];
+// Extract location_id & network_id from the URL
+const params = new URLSearchParams(window.location.search);
+const locationId = params.get('location_id');
 
 /**
  * Fetch and display property details using locationId
