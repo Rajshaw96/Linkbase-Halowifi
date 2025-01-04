@@ -10,7 +10,7 @@ const getHaloWiFiToken = async () => {
 
     //console.log('Fetching HaloWiFi token...');
     const response = await axios.post(
-      process.env.EXTERNAL_API_URL + '/api/external/token',
+      process.env.EXTERNAL_API_URL + '/external/token',
       {
         api_key: process.env.API_KEY,
         api_secret: process.env.API_SECRET,

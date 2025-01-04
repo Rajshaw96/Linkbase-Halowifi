@@ -15,7 +15,7 @@ router.get("/getAllLocations", async (req, res) => {
       });
     }
 
-    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/api/external/locations`, {
+    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/external/locations`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -82,7 +82,7 @@ router.get("/getAllLocations/:id", async (req, res) => {
       });
     }
 
-    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/api/external/locations/${id}`, {
+    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/external/locations/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
