@@ -8,29 +8,36 @@ const nextPage = document.querySelector('#nextPage');
 const exportDropdown = document.querySelector('#exportDropdown');
 
 let data = [];
+let filteredData = [];
 let currentPage = 1;
 let rowsPerPage = 8;
 let sortField = '';
 let sortOrder = 'asc';
 
+// Fetch data from the API
 async function fetchData() {
-    const response = await fetch(API_URL);
-    const json = await response.json();
-    data = json.data;
-    renderTable();
-    updatePagination();
-    totalCountElement.textContent = `Total Records: ${data.length}`;
+    try {
+        const response = await fetch(API_URL);
+        const json = await response.json();
+        data = json.data || [];
+        filteredData = [...data]; // Initialize filteredData with all records
+        renderTable();
+        updatePagination();
+        totalCountElement.textContent = `Total Records: ${data.length}`;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
 
+// Render table with paginated and filtered data
 function renderTable() {
-    let filteredData = filterAndSortData(data);
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
 
     tableBody.innerHTML = paginatedData
-    .map(
-        (item, index) => `
+        .map(
+            (item) => `
 <tr>
     <td>${item.guestFullName}</td>
     <td>${item.guestPhoneNo}</td>
@@ -38,16 +45,17 @@ function renderTable() {
     <td>${item.propertyLocationId || 'N/A'}</td>
     <td>${new Date(item.createdAt).toLocaleDateString()}</td>
     <td>
-        <button onclick="editRecord(${index})">&#9998;</button>
-        <button onclick="deleteRecord(${index})">&#128465;</button>
+        <button onclick="editRecord('${item._id}')">&#9998;</button>
+        <button onclick="deleteRecord('${item._id}')">&#128465;</button>
     </td>
 </tr>`
-)
-.join('');
+        )
+        .join('');
 }
 
-function filterAndSortData(data) {
-    let filtered = data.filter(
+// Filter and sort data based on search and sorting criteria
+function filterAndSortData() {
+    filteredData = data.filter(
         (item) =>
             item.guestFullName.toLowerCase().includes(searchInput.value.toLowerCase()) ||
             item.guestEmailId.toLowerCase().includes(searchInput.value.toLowerCase()) ||
@@ -55,7 +63,7 @@ function filterAndSortData(data) {
     );
 
     if (sortField) {
-        filtered.sort((a, b) => {
+        filteredData.sort((a, b) => {
             let valA = a[sortField];
             let valB = b[sortField];
 
@@ -69,40 +77,47 @@ function filterAndSortData(data) {
             return 0;
         });
     }
-
-    return filtered;
 }
 
-function editRecord(index) {
-    const record = data[index];
+// Edit record
+function editRecord(id) {
+    const record = data.find((item) => item._id === id);
+    if (!record) return;
+
     const newName = prompt('Edit Name:', record.guestFullName);
     const newPhone = prompt('Edit Phone:', record.guestPhoneNo);
     const newEmail = prompt('Edit Email:', record.guestEmailId);
+
     if (newName && newPhone && newEmail) {
-        data[index].guestFullName = newName;
-        data[index].guestPhoneNo = newPhone;
-        data[index].guestEmailId = newEmail;
+        record.guestFullName = newName;
+        record.guestPhoneNo = newPhone;
+        record.guestEmailId = newEmail;
+        filterAndSortData();
         renderTable();
     }
 }
 
-function deleteRecord(index) {
+// Delete record
+function deleteRecord(id) {
     if (confirm('Are you sure you want to delete this record?')) {
-        data.splice(index, 1);
+        data = data.filter((item) => item._id !== id);
+        filterAndSortData();
         renderTable();
         updatePagination();
+        totalCountElement.textContent = `Total Records: ${data.length}`;
     }
 }
 
+// Update pagination
 function updatePagination() {
-    const totalPages = Math.ceil(filterAndSortData(data).length / rowsPerPage);
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     prevPage.disabled = currentPage === 1;
     nextPage.disabled = currentPage === totalPages;
     pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
 }
 
+// Export data
 function exportData(type) {
-    const filteredData = filterAndSortData(data);
     const exportData = filteredData.map((item) => ({
         Name: item.guestFullName,
         Phone: item.guestPhoneNo,
@@ -121,14 +136,10 @@ function exportData(type) {
     }
 }
 
-exportDropdown.addEventListener('change', () => {
-    const exportType = exportDropdown.value;
-    exportData(exportType);
-    exportDropdown.value = '';
-});
-
+// Event listeners
 searchInput.addEventListener('input', () => {
     currentPage = 1;
+    filterAndSortData();
     renderTable();
     updatePagination();
 });
@@ -142,7 +153,7 @@ prevPage.addEventListener('click', () => {
 });
 
 nextPage.addEventListener('click', () => {
-    const totalPages = Math.ceil(filterAndSortData(data).length / rowsPerPage);
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     if (currentPage < totalPages) {
         currentPage++;
         renderTable();
@@ -150,4 +161,11 @@ nextPage.addEventListener('click', () => {
     }
 });
 
+exportDropdown.addEventListener('change', () => {
+    const exportType = exportDropdown.value;
+    exportData(exportType);
+    exportDropdown.value = '';
+});
+
+// Initialize
 fetchData();

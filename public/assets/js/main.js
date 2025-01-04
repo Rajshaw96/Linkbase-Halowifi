@@ -133,14 +133,6 @@ async function handleUserConnect() {
                 throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
             }
 
-            // Parse the response
-            //const responseData = await response.json();
-
-            // Alert success message
-            //alert("Data successfully added!");
-            //console.log("Data successfully added!");
-            //console.log("Response:", responseData);
-
             // Clear input fields after successful submission
             document.getElementById("guestFullName").value = "";
             document.getElementById("guestPhoneNo").value = "";
@@ -165,7 +157,7 @@ async function syncOfflineData() {
         const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
 
         if (offlineData.length > 0) {
-            const apiUrl = APP_API + '/userConnect';
+            const apiUrl = APP_API + '/guestConnect';
             try {
                 // Loop through all offline data and send it to the server
                 for (let data of offlineData) {
