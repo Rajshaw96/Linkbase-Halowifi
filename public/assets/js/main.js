@@ -142,9 +142,9 @@ async function handleUserConnect() {
             //console.log("Response:", responseData);
 
             // Clear input fields after successful submission
-            document.getElementById("fullName").value = "";
-            document.getElementById("phoneNo").value = "";
-            document.getElementById("emailId").value = "";
+            document.getElementById("guestFullName").value = "";
+            document.getElementById("guestPhoneNo").value = "";
+            document.getElementById("guestEmailId").value = "";
 
         } else {
             // If offline, store the data in local storage for later sync
