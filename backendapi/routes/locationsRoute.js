@@ -61,12 +61,12 @@ router.get("/getAllLocations", async (req, res) => {
 });
 
 // Get Location by ID API
-router.get("/getAllLocations/:id", async (req, res) => {
+router.get("/getAllLocations/:location_id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { location_id } = req.params;
 
-    // Validate ID
-    if (!id) {
+    // Validate location_id
+    if (!location_id) {
       return res.status(400).json({
         message: "Location ID is required.",
         status: "error",
@@ -82,7 +82,8 @@ router.get("/getAllLocations/:id", async (req, res) => {
       });
     }
 
-    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/external/locations/${id}`, {
+    // Fetch all locations from the external API
+    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/external/locations`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -90,28 +91,34 @@ router.get("/getAllLocations/:id", async (req, res) => {
 
     if (response.status !== 200) {
       return res.status(response.status).json({
-        message: "Failed to fetch location from external API.",
+        message: "Failed to fetch locations from external API.",
         status: "error",
       });
     }
 
+    const locations = response.data?.locations || [];
+
+    // Find the location by `location_id`
+    const location = locations.find((loc) => loc.location_id === location_id);
+
+    if (!location) {
+      return res.status(404).json({
+        message: `Location with ID ${location_id} not found.`,
+        status: "error",
+      });
+    }
+
+    // Return the found location
     return res.status(200).json({
       message: "Location fetched successfully.",
       status: "success",
-      location: response.data || {},
+      location,
     });
   } catch (error) {
     console.error("Error fetching location by ID:", error);
 
     if (axios.isAxiosError(error) && error.response) {
       const { status, data } = error.response;
-
-      if (status === 401) {
-        return res.status(401).json({
-          message: "Invalid API Credentials.",
-          status: "error",
-        });
-      }
 
       return res.status(status).json({
         message: data.message || "An error occurred with the external API.",
