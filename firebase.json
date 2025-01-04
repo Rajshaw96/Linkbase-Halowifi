@@ -9,12 +9,13 @@
     "rewrites": [
       {
         "source": "/api/**",
-        "destination": "/index.html"
+        "function": "backendAPI" 
       }
     ]
   },
   "functions": {
-    "source": "/backend", 
+    "source": "backend",
+    "runtime": "nodejs22",
     "ignore": [
       "node_modules",
       ".git",
