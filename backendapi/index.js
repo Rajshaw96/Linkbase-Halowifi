@@ -14,14 +14,14 @@ const app = express();
 
 // Connect to the database (MongoDB)
 connectDB()
-  .then(() => logger.info('MongoDB connected successfully'))  // Log database connection success
-  .catch((err) => logger.error(`MongoDB connection error: ${err.message}`));  // Log database connection errors
+  .then(() => logger.info('MongoDB connected successfully'))
+  .catch((err) => logger.error(`MongoDB connection error: ${err.message}`));
 
 // Security Best Practices (Improved with Helmet)
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }, // More specific policy
-  crossOriginEmbedderPolicy: false, // May be needed for some resources
-  crossOriginOpenerPolicy: false, // May be needed for some resources
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false,
 }));
 
 // Parse JSON requests
@@ -40,13 +40,13 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      logger.error(`CORS blocked request from origin: ${origin}`);  // Log blocked CORS requests
+      logger.error(`CORS blocked request from origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: "GET,PUT,POST,DELETE",
-  credentials: true, // Allow credentials/cookies
-  optionsSuccessStatus: 204, // Success status code for preflight requests
+  credentials: true,
+  optionsSuccessStatus: 204,
 };
 
 // Apply CORS middleware
@@ -54,15 +54,15 @@ app.use(cors(corsOptions));
 
 // Test Route (Useful for testing the server is running)
 app.get("/", (req, res) => {
-  logger.info('Root route accessed');  // Log root route access
+  logger.info('Root route accessed');
   res.send("Hello from Firebase!");
 });
 
 // API Routes (Adding various routes for your app)
-app.use('/propertiesDetails', propertyRoutes);  // Route for property details
-app.use('/guestConnect', guestConnectRoutes);  // Route for guest connections
-app.use('/connect/external', wifiRoutes);      // Route for external Wi-Fi connection
-app.use('/api', locationsRoute);
+app.use('/propertiesDetails', propertyRoutes);
+app.use('/guestConnect', guestConnectRoutes);
+app.use('/connect/external', wifiRoutes);
+app.use('/external/property', locationsRoute);
 
 // Log when each route is accessed
 app.use('/propertiesDetails', (req, res, next) => {
