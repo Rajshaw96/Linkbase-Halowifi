@@ -240,7 +240,7 @@ function renderPropertyDetails(propertyDetails) {
   const subtitle = document.getElementById("subtitle");
 
   // Set background image with a fallback color
-  const defaultBgColor = "linear-gradient(45deg, #0f172a, #1e293b);";
+  const defaultBgColor = "#0f172a";
   const bgImage = new Image();
   bgImage.src = propertyDetails.propertyBackgroundImg;
   bgImage.onload = () => {
