@@ -134,4 +134,71 @@ router.get("/getAllLocations/:location_id", async (req, res) => {
   }
 });
 
+// POST Create Location API
+router.post("/createLocation", async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      address,
+      latitude,
+      longitude,
+      category,
+      contact_email,
+      contact_phone_no,
+    } = req.body;
+
+    // Validate input
+    if (!name || !description || !address || !latitude || !longitude || !category || !contact_email || !contact_phone_no) {
+      return res.status(400).json({
+        message: "All fields are required.",
+        status: "error",
+      });
+    }
+
+    const token = await getHaloWiFiToken();
+    if (!token) {
+      return res.status(401).json({
+        message: "Failed to fetch authentication token.",
+        status: "error",
+      });
+    }
+
+    // Send the POST request to the external API to create the location
+    const response = await axios.post(
+      `${process.env.EXTERNAL_API_URL}/external/locations/add`,
+      {
+        name,
+        description,
+        address,
+        latitude,
+        longitude,
+        category,
+        contact_email,
+        contact_phone_no,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 201) {
+      return res.status(response.status).json({
+        message: "Failed to create location in external API.",
+        status: "error",
+      });
+    }
+
+    return res.status(201).json({
+      message: "Location created successfully.",
+      status: "success",
+      location: response.data.location,
+    });
+  } catch (error) {
+    console.error("Error creating location:", error);
+  }
+});
+
 module.exports = router;
