@@ -164,7 +164,6 @@ router.post("/createLocation", async (req, res) => {
       });
     }
 
-    // Send the POST request to the external API to create the location
     const response = await axios.post(
       `${process.env.EXTERNAL_API_URL}/external/locations/add`,
       {
@@ -198,6 +197,11 @@ router.post("/createLocation", async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating location:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      status: "error",
+      error: error.message,
+    });
   }
 });
 
