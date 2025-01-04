@@ -190,3 +190,63 @@ document.getElementById("loginBtn").addEventListener("click", handleUserConnect)
 
 // Listen for online status change and attempt to sync offline data
 window.addEventListener("online", syncOfflineData);
+
+// Extract locationId from the URL path
+const urlParts = window.location.pathname.split('/');
+const locationId = urlParts[urlParts.indexOf('locationId') + 1];
+
+/**
+ * Fetch and display property details using locationId
+ * @param {string} locationId
+ */
+async function fetchPropertyDetails(locationId) {
+    if (!locationId) {
+        console.error("Location ID is missing from the URL.");
+        alert("Location ID is required to fetch property details.");
+        return;
+    }
+
+    // API URL
+    const apiUrl = `${APP_API}/propertiesDetails/locationId/${locationId}`;
+
+    try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            const errorDetails = await response.json();
+            throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+        }
+
+        const propertyDetails = await response.json();
+        console.log("Fetched property details:", propertyDetails);
+
+        // Render property details
+        renderPropertyDetails(propertyDetails);
+    } catch (error) {
+        console.error("Error fetching property details:", error);
+        alert(`An error occurred while fetching property details: ${error.message}`);
+    }
+}
+
+/**
+ * Render property details on the page
+ * @param {Object} propertyDetails
+ */
+function renderPropertyDetails(propertyDetails) {
+    const container = document.getElementById('propertyDetailsContainer');
+
+    if (!container) {
+        console.error("Property details container element is missing.");
+        return;
+    }
+
+    container.innerHTML = `
+        <h3>Property Details</h3>
+        <p><strong>Location ID:</strong> ${propertyDetails.location_id || 'N/A'}</p>
+        <p><strong>Name:</strong> ${propertyDetails.name || 'N/A'}</p>
+        <p><strong>Address:</strong> ${propertyDetails.address || 'N/A'}</p>
+    `;
+}
+
+// Initialize the fetch process
+fetchPropertyDetails(locationId);

@@ -23,6 +23,22 @@ exports.getPropertyById = async (req, res) => {
   }
 };
 
+// Get property by Location ID
+exports.getPropertyByLocationId = async (req, res) => {
+  try {
+    const propertyLocation = await Property.findOne({ propertyLocationId: req.params.propertyLocationId }).select('-__v');
+
+    if (!propertyLocation) {
+      return res.status(404).json({ message: 'Property Location not found' });
+    }
+
+    res.status(200).json(propertyLocation);
+  } catch (err) {
+    console.error("Error fetching property by location ID:", err);
+    res.status(500).json({ message: 'Failed to fetch property details', error: err.message });
+  }
+};
+
 // Create a new property
 exports.createProperty = async (req, res) => {
   try {
