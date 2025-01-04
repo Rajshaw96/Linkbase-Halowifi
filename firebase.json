@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -9,18 +9,32 @@
     "rewrites": [
       {
         "source": "/api/**",
-        "function": "backendAPI" 
+        "function": "backendAPI"
       }
     ]
   },
-  "functions": {
-    "source": "backend",
-    "runtime": "nodejs22",
-    "ignore": [
-      "node_modules",
-      ".git",
-      "firebase-debug.log",
-      "firebase-debug.*.log"
-    ]
-  }
+  "functions": [
+    {
+      "source": "backendapi",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ],
+      "codebase": "default"
+    },
+    {
+      "source": "backendapi",
+      "codebase": "backendapi",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
 }
