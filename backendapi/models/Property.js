@@ -7,6 +7,7 @@ const SplashPageSchema = new mongoose.Schema(
     propertyBackgroundImg: String,
     propertySplashPageTitle: String,
     propertySplashPageDescription: String,
+    propertyLocationId: String,
   },
   { 
     timestamps: true    // This automatically adds `createdAt` and `updatedAt`
