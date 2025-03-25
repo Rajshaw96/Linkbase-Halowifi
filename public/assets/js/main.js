@@ -211,77 +211,42 @@ async function fetchPropertyDetails(locationId) {
 
   try {
     const response = await fetch(apiUrl);
-  
+
     if (!response.ok) {
       let errorMessage = `HTTP error! Status: ${response.status}`;
-      
-      // Attempt to parse JSON error message only if the response is in JSON format
+
+      // Attempt to parse JSON error response
       try {
         const errorDetails = await response.json();
         errorMessage = errorDetails.message || errorMessage;
       } catch (jsonError) {
         console.warn("Response is not in JSON format.");
       }
-  
+
       throw new Error(errorMessage);
     }
-  
+
+    // Ensure response is valid JSON before using it
     const propertyDetails = await response.json();
-    console.log("Fetched property details:", propertyDetails);
-  
-    // Ensure propertyDetails is valid before rendering
+
     if (!propertyDetails || Object.keys(propertyDetails).length === 0) {
       throw new Error("Received empty property details.");
     }
-  
+
+    console.log("Fetched property details:", propertyDetails);
+
     // Render property details
     renderPropertyDetails(propertyDetails);
   } catch (error) {
     console.error("Error fetching property details:", error);
     alert(`An error occurred while fetching property details: ${error.message}`);
-  }  
+  }
 }
 
 /**
  * Render property details on the page
  * @param {Object} propertyDetails
  */
-// function renderPropertyDetails(propertyDetails) {
-//   const body = document.getElementById("body");
-//   const logoImg = document.getElementById("logo-img");
-//   const propertyName = document.getElementById("property-name");
-//   const splashTitle = document.getElementById("splash-title");
-//   const subtitle = document.getElementById("subtitle");
-
-//   // Set background image with a fallback color
-//   const defaultBgColor = "#0f172a";
-//   const bgImage = new Image();
-//   bgImage.src = propertyDetails.propertyBackgroundImg;
-//   bgImage.onload = () => {
-//     body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
-//     body.style.backgroundSize = "cover";
-//     body.style.backgroundPosition = "center";
-//   };
-//   bgImage.onerror = () => {
-//     body.style.backgroundColor = defaultBgColor;
-//   };
-
-//   // Update logo and property details
-//   if (propertyDetails.propertyLogo) {
-//     logoImg.src = propertyDetails.propertyLogo;
-//   } else {
-//     logoImg.alt = "Logo not available";
-//   }
-
-//   propertyName.textContent = propertyDetails.propertyName || "Linkbase";
-//   splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
-//   subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
-
-//   console.log("Rendered property details successfully.");
-// }
-
-// Initialize the fetch process
-
 function renderPropertyDetails(propertyDetails) {
   const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
@@ -289,38 +254,56 @@ function renderPropertyDetails(propertyDetails) {
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
 
-  // Set background image
-  if (body) {
-    const defaultBgColor = "#0f172a";
+  // Ensure elements exist before updating
+  if (!body || !logoImg || !propertyName || !splashTitle || !subtitle) {
+    console.error("One or more required elements are missing in the DOM.");
+    return;
+  }
+
+  // Set background image with a fallback color
+  const defaultBgColor = "#0f172a";
+
+  if (propertyDetails.propertyBackgroundImg) {
     const bgImage = new Image();
     bgImage.src = propertyDetails.propertyBackgroundImg;
+
     bgImage.onload = () => {
       body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
       body.style.backgroundSize = "cover";
       body.style.backgroundPosition = "center";
     };
+
     bgImage.onerror = () => {
+      console.warn("Failed to load background image, using fallback color.");
       body.style.backgroundColor = defaultBgColor;
     };
-  }
-
-  // Update logo image only if the element exists
-  if (logoImg) {
-    if (propertyDetails.propertyLogo) {
-      logoImg.src = propertyDetails.propertyLogo;
-    } else {
-      logoImg.alt = "Logo not available";
-    }
   } else {
-    console.warn("Element with ID 'logo-img' not found in DOM.");
+    console.warn("No background image provided, using fallback color.");
+    body.style.backgroundColor = defaultBgColor;
   }
 
-  // Update text content
-  if (propertyName) propertyName.textContent = propertyDetails.propertyName || "Linkbase";
-  if (splashTitle) splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
-  if (subtitle) subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
+  // Update logo if available
+  if (propertyDetails.propertyLogo) {
+    logoImg.src = propertyDetails.propertyLogo;
+    logoImg.alt = "Property Logo";
+  } else {
+    console.warn("No property logo provided.");
+    logoImg.alt = "Logo not available";
+  }
+
+  // Update text content with fallback values
+  propertyName.textContent = propertyDetails.propertyName || "Linkbase";
+  splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
+  subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
 
   console.log("Rendered property details successfully.");
 }
 
+// Ensure the script runs only after the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const locationId = new URLSearchParams(window.location.search).get("locationId");
+  fetchPropertyDetails(locationId);
+});
+
+// Initialize the fetch process
 fetchPropertyDetails(locationId);
