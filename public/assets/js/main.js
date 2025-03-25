@@ -193,9 +193,7 @@ window.addEventListener("online", syncOfflineData);
 
 // Extract location_id from the URL
 const params = new URLSearchParams(window.location.search);
-const locationId1 = params.get('location_id');
-
-const locationId = "6fd3f409-e0db-42e9-be2e-0c7d9f7a1f02";
+const locationId = params.get('location_id');
 
 console.log("Extracted Location ID:", locationId); // Debugging: Check if locationId is correct
 
