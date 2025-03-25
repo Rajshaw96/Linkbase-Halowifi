@@ -310,4 +310,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Initialize the fetch process
-fetchPropertyDetails(locationId);
+// fetchPropertyDetails(locationId);
