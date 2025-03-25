@@ -233,21 +233,11 @@ async function fetchPropertyDetails(locationId) {
  * @param {Object} propertyDetails
  */
 function renderPropertyDetails(propertyDetails) {
-  if (!propertyDetails) {
-    console.error("propertyDetails is undefined or null.");
-    return;
-  }
-
   const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
   const propertyName = document.getElementById("property-name");
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
-
-  if (!body || !logoImg || !propertyName || !splashTitle || !subtitle) {
-    console.error("One or more elements are missing from the DOM.");
-    return;
-  }
 
   // Set background image with a fallback color
   const defaultBgColor = "#0f172a";
@@ -276,28 +266,5 @@ function renderPropertyDetails(propertyDetails) {
   console.log("Rendered property details successfully.");
 }
 
-// Ensure `locationId` is defined before calling the function
-console.log("Fetching property details for:", locationId);
-
-/**
- * Fetch property details from API
- * @param {string} locationId
- */
-async function fetchPropertyDetails(locationId) {
-  try {
-    const response = await fetch(`https://property-manager-j6d4.onrender.com/properties/${locationId}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch property details");
-    }
-    const propertyDetails = await response.json();
-    console.log("Fetched property details:", propertyDetails);
-    renderPropertyDetails(propertyDetails);
-  } catch (error) {
-    console.error("An error occurred while fetching property details:", error);
-  }
-}
-
-// Initialize fetch process after DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-  fetchPropertyDetails(locationId);
-});
+// Initialize the fetch process
+fetchPropertyDetails(locationId);
