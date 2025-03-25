@@ -233,7 +233,7 @@ async function fetchPropertyDetails(locationId) {
  * @param {Object} propertyDetails
  */
 function renderPropertyDetails(propertyDetails) {
-  const body = document.getElementById("body");
+  // const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
   const propertyName = document.getElementById("property-name");
   const splashTitle = document.getElementById("splash-title");
