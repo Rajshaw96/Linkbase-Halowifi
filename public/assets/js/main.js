@@ -242,12 +242,12 @@ function renderPropertyDetails(propertyDetails) {
   // Set background image with a fallback color
   const defaultBgColor = "#0f172a";
   const bgImage = new Image();
-  bgImage.src = propertyDetails.propertyBackgroundImg;
-  bgImage.onload = () => {
-    body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
-    body.style.backgroundSize = "cover";
-    body.style.backgroundPosition = "center";
-  };
+  // bgImage.src = propertyDetails.propertyBackgroundImg;
+  // bgImage.onload = () => {
+  //   body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
+  //   body.style.backgroundSize = "cover";
+  //   body.style.backgroundPosition = "center";
+  // };
   bgImage.onerror = () => {
     body.style.backgroundColor = defaultBgColor;
   };
