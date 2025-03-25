@@ -246,6 +246,42 @@ async function fetchPropertyDetails(locationId) {
  * Render property details on the page
  * @param {Object} propertyDetails
  */
+// function renderPropertyDetails(propertyDetails) {
+//   const body = document.getElementById("body");
+//   const logoImg = document.getElementById("logo-img");
+//   const propertyName = document.getElementById("property-name");
+//   const splashTitle = document.getElementById("splash-title");
+//   const subtitle = document.getElementById("subtitle");
+
+//   // Set background image with a fallback color
+//   const defaultBgColor = "#0f172a";
+//   const bgImage = new Image();
+//   bgImage.src = propertyDetails.propertyBackgroundImg;
+//   bgImage.onload = () => {
+//     body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
+//     body.style.backgroundSize = "cover";
+//     body.style.backgroundPosition = "center";
+//   };
+//   bgImage.onerror = () => {
+//     body.style.backgroundColor = defaultBgColor;
+//   };
+
+//   // Update logo and property details
+//   if (propertyDetails.propertyLogo) {
+//     logoImg.src = propertyDetails.propertyLogo;
+//   } else {
+//     logoImg.alt = "Logo not available";
+//   }
+
+//   propertyName.textContent = propertyDetails.propertyName || "Linkbase";
+//   splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
+//   subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
+
+//   console.log("Rendered property details successfully.");
+// }
+
+// Initialize the fetch process
+
 function renderPropertyDetails(propertyDetails) {
   const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
@@ -253,32 +289,38 @@ function renderPropertyDetails(propertyDetails) {
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
 
-  // Set background image with a fallback color
-  const defaultBgColor = "#0f172a";
-  const bgImage = new Image();
-  bgImage.src = propertyDetails.propertyBackgroundImg;
-  bgImage.onload = () => {
-    body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
-    body.style.backgroundSize = "cover";
-    body.style.backgroundPosition = "center";
-  };
-  bgImage.onerror = () => {
-    body.style.backgroundColor = defaultBgColor;
-  };
-
-  // Update logo and property details
-  if (propertyDetails.propertyLogo) {
-    logoImg.src = propertyDetails.propertyLogo;
-  } else {
-    logoImg.alt = "Logo not available";
+  // Set background image
+  if (body) {
+    const defaultBgColor = "#0f172a";
+    const bgImage = new Image();
+    bgImage.src = propertyDetails.propertyBackgroundImg;
+    bgImage.onload = () => {
+      body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
+      body.style.backgroundSize = "cover";
+      body.style.backgroundPosition = "center";
+    };
+    bgImage.onerror = () => {
+      body.style.backgroundColor = defaultBgColor;
+    };
   }
 
-  propertyName.textContent = propertyDetails.propertyName || "Linkbase";
-  splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
-  subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
+  // Update logo image only if the element exists
+  if (logoImg) {
+    if (propertyDetails.propertyLogo) {
+      logoImg.src = propertyDetails.propertyLogo;
+    } else {
+      logoImg.alt = "Logo not available";
+    }
+  } else {
+    console.warn("Element with ID 'logo-img' not found in DOM.");
+  }
+
+  // Update text content
+  if (propertyName) propertyName.textContent = propertyDetails.propertyName || "Linkbase";
+  if (splashTitle) splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
+  if (subtitle) subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
 
   console.log("Rendered property details successfully.");
 }
 
-// Initialize the fetch process
 fetchPropertyDetails(locationId);
