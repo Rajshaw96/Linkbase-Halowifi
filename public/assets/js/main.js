@@ -195,6 +195,8 @@ window.addEventListener("online", syncOfflineData);
 const params = new URLSearchParams(window.location.search);
 const locationId = params.get('location_id');
 
+console.log("Extracted Location ID:", locationId); // Debugging: Check if locationId is correct
+
 /**
  * Fetch and display property details using locationId
  * @param {string} locationId
