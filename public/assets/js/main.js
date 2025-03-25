@@ -211,21 +211,35 @@ async function fetchPropertyDetails(locationId) {
 
   try {
     const response = await fetch(apiUrl);
-
+  
     if (!response.ok) {
-      const errorDetails = await response.json();
-      throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+      let errorMessage = `HTTP error! Status: ${response.status}`;
+      
+      // Attempt to parse JSON error message only if the response is in JSON format
+      try {
+        const errorDetails = await response.json();
+        errorMessage = errorDetails.message || errorMessage;
+      } catch (jsonError) {
+        console.warn("Response is not in JSON format.");
+      }
+  
+      throw new Error(errorMessage);
     }
-
+  
     const propertyDetails = await response.json();
     console.log("Fetched property details:", propertyDetails);
-
+  
+    // Ensure propertyDetails is valid before rendering
+    if (!propertyDetails || Object.keys(propertyDetails).length === 0) {
+      throw new Error("Received empty property details.");
+    }
+  
     // Render property details
     renderPropertyDetails(propertyDetails);
   } catch (error) {
     console.error("Error fetching property details:", error);
     alert(`An error occurred while fetching property details: ${error.message}`);
-  }
+  }  
 }
 
 /**
@@ -233,7 +247,7 @@ async function fetchPropertyDetails(locationId) {
  * @param {Object} propertyDetails
  */
 function renderPropertyDetails(propertyDetails) {
-  // const body = document.getElementById("body");
+  const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
   const propertyName = document.getElementById("property-name");
   const splashTitle = document.getElementById("splash-title");
@@ -242,12 +256,12 @@ function renderPropertyDetails(propertyDetails) {
   // Set background image with a fallback color
   const defaultBgColor = "#0f172a";
   const bgImage = new Image();
-  // bgImage.src = propertyDetails.propertyBackgroundImg;
-  // bgImage.onload = () => {
-  //   body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
-  //   body.style.backgroundSize = "cover";
-  //   body.style.backgroundPosition = "center";
-  // };
+  bgImage.src = propertyDetails.propertyBackgroundImg;
+  bgImage.onload = () => {
+    body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
+    body.style.backgroundSize = "cover";
+    body.style.backgroundPosition = "center";
+  };
   bgImage.onerror = () => {
     body.style.backgroundColor = defaultBgColor;
   };
