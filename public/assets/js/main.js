@@ -254,9 +254,13 @@ function renderPropertyDetails(propertyDetails) {
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
 
-  // Ensure elements exist before updating them
-  if (!body || !propertyName || !splashTitle || !subtitle) {
-    console.error("One or more required elements are missing in the DOM.");
+  // Check if all required elements exist before modifying them
+  if (!body) {
+    console.error("Element with id 'body' is missing in the DOM.");
+    return;
+  }
+  if (!propertyName || !splashTitle || !subtitle) {
+    console.error("One or more text elements (property-name, splash-title, subtitle) are missing in the DOM.");
     return;
   }
 
