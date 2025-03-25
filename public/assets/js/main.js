@@ -254,8 +254,8 @@ function renderPropertyDetails(propertyDetails) {
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
 
-  // Ensure elements exist before updating
-  if (!body || !logoImg || !propertyName || !splashTitle || !subtitle) {
+  // Ensure elements exist before updating them
+  if (!body || !propertyName || !splashTitle || !subtitle) {
     console.error("One or more required elements are missing in the DOM.");
     return;
   }
@@ -283,12 +283,16 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   // Update logo if available
-  if (propertyDetails.propertyLogo) {
-    logoImg.src = propertyDetails.propertyLogo;
-    logoImg.alt = "Property Logo";
+  if (logoImg) {
+    if (propertyDetails.propertyLogo) {
+      logoImg.src = propertyDetails.propertyLogo;
+      logoImg.alt = "Property Logo";
+    } else {
+      console.warn("No property logo provided.");
+      logoImg.alt = "Logo not available";
+    }
   } else {
-    console.warn("No property logo provided.");
-    logoImg.alt = "Logo not available";
+    console.error("Logo image element is missing in the DOM.");
   }
 
   // Update text content with fallback values
@@ -299,7 +303,7 @@ function renderPropertyDetails(propertyDetails) {
   console.log("Rendered property details successfully.");
 }
 
-// Ensure the script runs only after the DOM is fully loaded
+// Ensure script runs only after the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
   const locationId = new URLSearchParams(window.location.search).get("locationId");
   fetchPropertyDetails(locationId);
