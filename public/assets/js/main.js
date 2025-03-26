@@ -191,11 +191,20 @@ document.getElementById("loginBtn").addEventListener("click", handleUserConnect)
 // Listen for online status change and attempt to sync offline data
 window.addEventListener("online", syncOfflineData);
 
-// Extract location_id from the URL
-const params = new URLSearchParams(window.location.search);
-const locationId = params.get('location_id');
+// Function to get location_id from URL or sessionStorage
+function getLocationId() {
+  const params = new URLSearchParams(window.location.search);
+  let locationId = params.get("location_id");
 
-console.log("Extracted Location ID:", locationId); // Debugging: Check if locationId is correct
+  if (locationId) {
+    sessionStorage.setItem("location_id", locationId); // Store in session
+  } else {
+    locationId = sessionStorage.getItem("location_id"); // Retrieve from session if URL doesn't have it
+  }
+
+  console.log("Extracted Location ID:", locationId); // Debugging
+  return locationId;
+}
 
 /**
  * Fetch and display property details using locationId
@@ -203,12 +212,13 @@ console.log("Extracted Location ID:", locationId); // Debugging: Check if locati
  */
 async function fetchPropertyDetails(locationId) {
   if (!locationId) {
-    console.error("Location ID is missing from the URL.");
+    console.error("❌ Location ID is missing.");
     alert("Location ID is required to fetch property details.");
     return;
   }
 
-  // API URL
+  console.log("✅ Fetching Property Details for Location ID:", locationId);
+
   const apiUrl = `${APP_API}/propertiesDetails/locationId/${locationId}`;
 
   try {
@@ -216,31 +226,25 @@ async function fetchPropertyDetails(locationId) {
 
     if (!response.ok) {
       let errorMessage = `HTTP error! Status: ${response.status}`;
-
-      // Attempt to parse JSON error response
       try {
         const errorDetails = await response.json();
         errorMessage = errorDetails.message || errorMessage;
       } catch (jsonError) {
-        console.warn("Response is not in JSON format.");
+        console.warn("⚠️ Response is not in JSON format.");
       }
-
       throw new Error(errorMessage);
     }
 
-    // Ensure response is valid JSON before using it
     const propertyDetails = await response.json();
+    console.log("✅ Fetched Property Details:", propertyDetails);
 
     if (!propertyDetails || Object.keys(propertyDetails).length === 0) {
-      throw new Error("Received empty property details.");
+      throw new Error("❌ Received empty property details.");
     }
 
-    console.log("Fetched property details:", propertyDetails);
-
-    // Render property details
     renderPropertyDetails(propertyDetails);
   } catch (error) {
-    console.error("Error fetching property details:", error);
+    console.error("❌ Error fetching property details:", error);
     alert(`An error occurred while fetching property details: ${error.message}`);
   }
 }
@@ -252,23 +256,16 @@ async function fetchPropertyDetails(locationId) {
 function renderPropertyDetails(propertyDetails) {
   const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
-  const propertyName = document.getElementById("property-name");
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
 
-  // Check if all required elements exist before modifying them
-  if (!body) {
-    console.error("Element with id 'body' is missing in the DOM.");
-    return;
-  }
-  if (!propertyName || !splashTitle || !subtitle) {
-    console.error("One or more text elements (property-name, splash-title, subtitle) are missing in the DOM.");
+  if (!body || !splashTitle || !subtitle) {
+    console.error("❌ Required elements are missing in the DOM.");
     return;
   }
 
-  // Set background image with a fallback color
+  // Set background image or fallback color
   const defaultBgColor = "#0f172a";
-
   if (propertyDetails.propertyBackgroundImg) {
     const bgImage = new Image();
     bgImage.src = propertyDetails.propertyBackgroundImg;
@@ -280,11 +277,11 @@ function renderPropertyDetails(propertyDetails) {
     };
 
     bgImage.onerror = () => {
-      console.warn("Failed to load background image, using fallback color.");
+      console.warn("⚠️ Failed to load background image, using fallback color.");
       body.style.backgroundColor = defaultBgColor;
     };
   } else {
-    console.warn("No background image provided, using fallback color.");
+    console.warn("⚠️ No background image provided, using fallback color.");
     body.style.backgroundColor = defaultBgColor;
   }
 
@@ -294,26 +291,25 @@ function renderPropertyDetails(propertyDetails) {
       logoImg.src = propertyDetails.propertyLogo;
       logoImg.alt = "Property Logo";
     } else {
-      console.warn("No property logo provided.");
+      console.warn("⚠️ No property logo provided.");
       logoImg.alt = "Logo not available";
     }
   } else {
-    console.error("Logo image element is missing in the DOM.");
+    console.error("❌ Logo image element is missing in the DOM.");
   }
 
-  // Update text content with fallback values
-  propertyName.textContent = propertyDetails.propertyName || "Linkbase";
+  // Update text content
   splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
   subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
 
-  console.log("Rendered property details successfully.");
+  console.log("✅ Rendered property details successfully.");
 }
 
-// Ensure script runs only after the DOM is fully loaded
+// Ensure script runs after DOM is loaded & prevents duplicate calls
 document.addEventListener("DOMContentLoaded", () => {
-  const locationId = new URLSearchParams(window.location.search).get("locationId");
-  fetchPropertyDetails(locationId);
+  const locationId = getLocationId();
+  if (locationId) {
+    fetchPropertyDetails(locationId);
+  }
 });
 
-// Initialize the fetch process
-fetchPropertyDetails(locationId);
