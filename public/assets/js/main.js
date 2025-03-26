@@ -192,13 +192,15 @@ document.getElementById("loginBtn").addEventListener("click", handleUserConnect)
 window.addEventListener("online", syncOfflineData);
 
 // Extract location_id from the URL
+const params = new URLSearchParams(window.location.search);
+const locationId = params.get('location_id');
 
-// const params = new URLSearchParams(window.location.search);
-// const locationId = params.get('location_id');
+console.log("Extracted Location ID:", locationId); // Debugging: Check if locationId is correct
 
-//console.log("Extracted Location ID:", locationId); // Debugging: Check if locationId is correct
-
-
+/**
+ * Fetch and display property details using locationId
+ * @param {string} locationId
+ */
 async function fetchPropertyDetails(locationId) {
   if (!locationId) {
     console.error("Location ID is missing from the URL.");
@@ -314,4 +316,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Initialize the fetch process
-// fetchPropertyDetails(locationId);
+fetchPropertyDetails(locationId);
