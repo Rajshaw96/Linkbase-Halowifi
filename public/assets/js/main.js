@@ -115,7 +115,7 @@ async function handleUserConnect() {
   };
 
   // API URL
-  const apiUrl = APP_API + '/guestConnect';
+  const apiUrl = GUEST_POST_API + '/guest-details';
 
   try {
     // Check for internet connection
@@ -245,17 +245,15 @@ async function fetchPropertyDetails(locationId) {
     renderPropertyDetails(propertyDetails);
   } catch (error) {
     console.error("❌ Error fetching property details:", error);
-    alert(`An error occurred while fetching property details: ${error.message}`);
+    //alert(`An error occurred while fetching property details: ${error.message}`);
+    renderPropertyDetails({});
   }
 }
 
-/**
- * Render property details on the page
- * @param {Object} propertyDetails
- */
 function renderPropertyDetails(propertyDetails) {
   const body = document.getElementById("body");
   const logoImg = document.getElementById("logo-img");
+  const propertyName = document.getElementById("property-name");
   const splashTitle = document.getElementById("splash-title");
   const subtitle = document.getElementById("subtitle");
 
@@ -264,7 +262,6 @@ function renderPropertyDetails(propertyDetails) {
     return;
   }
 
-  // Set background image or fallback color
   const defaultBgColor = "#0f172a";
   if (propertyDetails.propertyBackgroundImg) {
     const bgImage = new Image();
@@ -277,39 +274,36 @@ function renderPropertyDetails(propertyDetails) {
     };
 
     bgImage.onerror = () => {
-      console.warn("⚠️ Failed to load background image, using fallback color.");
       body.style.backgroundColor = defaultBgColor;
     };
   } else {
-    console.warn("⚠️ No background image provided, using fallback color.");
     body.style.backgroundColor = defaultBgColor;
   }
 
-  // Update logo if available
   if (logoImg) {
     if (propertyDetails.propertyLogo) {
       logoImg.src = propertyDetails.propertyLogo;
       logoImg.alt = "Property Logo";
     } else {
-      console.warn("⚠️ No property logo provided.");
       logoImg.alt = "Logo not available";
     }
-  } else {
-    console.error("❌ Logo image element is missing in the DOM.");
   }
 
-  // Update text content
+  if (propertyName) {
+    propertyName.textContent = propertyDetails.propertyName || "Linkbase";
+  }
+
   splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Welcome";
-  subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view";
+  subtitle.textContent = propertyDetails.propertySplashPageDescription || "Living room with sea view.!!";
 
   console.log("✅ Rendered property details successfully.");
 }
 
-// Ensure script runs after DOM is loaded & prevents duplicate calls
 document.addEventListener("DOMContentLoaded", () => {
   const locationId = getLocationId();
   if (locationId) {
     fetchPropertyDetails(locationId);
   }
 });
+
 
