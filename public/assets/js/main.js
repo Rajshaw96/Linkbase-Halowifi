@@ -99,6 +99,7 @@ async function handleUserConnect() {
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
+  const otherGuestEmail = document.getElementById("otherGuestEmail").value.trim();
 
   // Extract location_id & network_id from the URL
   const params = new URLSearchParams(window.location.search);
@@ -110,6 +111,7 @@ async function handleUserConnect() {
     guestFullName: guestFullName,    
     guestPhoneNo: guestPhoneNo,      
     guestEmailId: guestEmailId,      
+    otherGuestEmail: otherGuestEmail,      
     propertyLocationId: location_id,   
     propertyNetworkId: network_id,   
   };
@@ -137,6 +139,7 @@ async function handleUserConnect() {
       document.getElementById("guestFullName").value = "";
       document.getElementById("guestPhoneNo").value = "";
       document.getElementById("guestEmailId").value = "";
+      document.getElementById("otherGuestEmail").value = "";
 
     } else {
       // If offline, store the data in local storage for later sync
