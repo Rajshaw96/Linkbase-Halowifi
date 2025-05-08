@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
 app.use('/propertiesDetails', propertyRoutes);
 app.use('/guestConnect', guestConnectRoutes);
 app.use('/connect/external', wifiRoutes);
-app.use('/external/property', locationsRoute);
+app.use('/external/location', locationsRoute);
 
 // Log when each route is accessed
 app.use('/propertiesDetails', (req, res, next) => {

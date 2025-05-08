@@ -1,7 +1,5 @@
 const { GuestConnect, validateGuestConnect } = require('../models/GuestConnect');
 const ExcelJS = require('exceljs');
-const { writeToBuffer } = require('@fast-csv/format');
-const PDFDocument = require('pdfkit');
 
 // Helper function to check if required fields are present
 const validateGuestConnectFields = (req) => {
@@ -194,80 +192,5 @@ exports.exportGuestConnectionsExcel = async (req, res) => {
   } catch (error) {
     console.error('Error exporting guest connections:', error);
     res.status(500).json({ message: 'Error exporting to Excel' });
-  }
-};
-
-// Export guest connections as CSV
-exports.exportGuestConnectionsCSV = async (req, res) => {
-  try {
-    // Fetch all guest connections
-    const guestConnections = await GuestConnect.find().lean(); // Use lean() to return plain objects
-
-    if (!guestConnections || guestConnections.length === 0) {
-      return res.status(404).json({ message: 'No guest connections found to export.' });
-    }
-
-    // Map the data to the required format
-    const csvData = await writeToBuffer(
-      guestConnections.map((connection) => ({
-        guestFullName: connection.guestFullName,
-        guestPhoneNo: connection.guestPhoneNo,
-        guestEmailId: connection.guestEmailId,
-        propertyLocationId: connection.propertyLocationId,
-        propertyNetworkId: connection.propertyNetworkId,
-        createdAt: connection.createdAt,
-        updatedAt: connection.updatedAt,
-      })),
-      { headers: true }
-    );
-
-    // Set response headers and send CSV
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename="guest_connections.csv"');
-    res.send(csvData);
-  } catch (error) {
-    console.error('Error exporting to CSV:', error);
-    res.status(500).json({ message: 'Error exporting to CSV' });
-  }
-};
-
-// Export guest connections as PDF
-exports.exportGuestConnectionsPDF = async (req, res) => {
-  try {
-    const guestConnections = await GuestConnect.find();
-
-    const doc = new PDFDocument({ margin: 30 });
-
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="guest_connections.pdf"');
-    doc.pipe(res);
-
-    // Add a title
-    doc.fontSize(16).text('Guest Connections', { align: 'center' });
-    doc.moveDown();
-
-    // Add table headers
-    doc.fontSize(12).text('Full Name', { continued: true, width: 150 });
-    doc.text('Phone No', { continued: true, width: 100 });
-    doc.text('Email ID', { continued: true, width: 150 });
-    doc.text('Property Location ID', { continued: true, width: 150 });
-    doc.text('Property Network ID', { width: 150 });
-    doc.moveDown();
-
-    // Add data
-    guestConnections.forEach((connection) => {
-      doc.fontSize(10)
-        .text(connection.guestFullName, { continued: true, width: 150 })
-        .text(connection.guestPhoneNo, { continued: true, width: 100 })
-        .text(connection.guestEmailId, { continued: true, width: 150 })
-        .text(connection.propertyLocationId, { continued: true, width: 150 })
-        .text(connection.propertyNetworkId, { width: 150 });
-      doc.moveDown();
-    });
-
-    doc.end();
-  } catch (error) {
-    console.error('Error exporting to PDF:', error);
-    res.status(500).json({ message: 'Error exporting to PDF' });
   }
 };
