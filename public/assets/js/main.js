@@ -219,7 +219,7 @@ async function fetchPropertyDetails(locationId) {
 
   console.log("✅ Fetching Property Details for Location ID:", locationId);
 
-  const apiUrl = `${APP_API}/propertiesDetails/locationId/${locationId}`;
+  const apiUrl = `${APP_API}/getAllLocations?location_id=${locationId}`;
 
   try {
     const response = await fetch(apiUrl);
