@@ -237,6 +237,7 @@ async function fetchPropertyDetails(locationId) {
 
     const propertyDetails = await response.json();
     console.log("✅ Fetched Property Details:", propertyDetails);
+    console.log("✅ Fetched Property Background Img:", propertyDetails.locations.background_img);
 
     if (!propertyDetails || Object.keys(propertyDetails).length === 0) {
       throw new Error("❌ Received empty property details.");
@@ -263,12 +264,12 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   const defaultBgColor = "#0f172a";
-  if (propertyDetails.propertyBackgroundImg) {
+  if (propertyDetails.locations.background_img) {
     const bgImage = new Image();
-    bgImage.src = propertyDetails.propertyBackgroundImg;
+    bgImage.src = propertyDetails.locations.background_img;
 
     bgImage.onload = () => {
-      body.style.backgroundImage = `url('${propertyDetails.propertyBackgroundImg}')`;
+      body.style.backgroundImage = `url('${propertyDetails.locations.background_img}')`;
       body.style.backgroundSize = "cover";
       body.style.backgroundPosition = "center";
     };
@@ -281,8 +282,8 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   if (logoImg) {
-    if (propertyDetails.propertyLogo) {
-      logoImg.src = propertyDetails.propertyLogo;
+    if (propertyDetails.locations.logo_img) {
+      logoImg.src = propertyDetails.locations.logo_img;
       logoImg.alt = "Property Logo";
     } else {
       logoImg.alt = "Logo not available";
