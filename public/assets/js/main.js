@@ -12,11 +12,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Checkbox and button logic
   const termsCheckbox = document.getElementById('terms');
+  const termsCheckbox1 = document.getElementById('terms1');
   const loginBtn = document.getElementById('loginBtn');
 
+  termsCheckbox1.addEventListener('change', function() {
+    loginBtn.disabled = !this.checked;
+  });
+  
   termsCheckbox.addEventListener('change', function() {
     loginBtn.disabled = !this.checked;
   });
+
+
 });
 
 function openModal(type) {  
@@ -45,6 +52,7 @@ $(document).ready(function() {
     // hide the loginBtn, welcome back text and checkbox
     $('#loginBtn').hide();
     // hide the checkbox
+    $(".checkbox-wrapper").addClass('hidden');
     $(".checkbox-wrapper").addClass('hidden');
     // show  this text 
     $('#loginRequestMalformed').removeClass('hidden');
@@ -294,7 +302,7 @@ function renderPropertyDetails(propertyDetails) {
     propertyName.textContent = propertyDetails.propertyName || "Linkbase";
   }
 
-  splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Get started with wifi";
+  splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Connect To The Wifi";
   subtitle.textContent = propertyDetails.propertySplashPageDescription || "Welcome to Casa-Loma";
 
   console.log("✅ Rendered property details successfully.");

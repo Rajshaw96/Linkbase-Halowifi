@@ -147,7 +147,7 @@ button:not(:disabled):active {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     width: 90%;
-    max-width: 500px;
+    max-width: 100%;
     margin: 50px auto;
     padding: 1rem;
     animation: modalSlide 0.3s ease-out;
