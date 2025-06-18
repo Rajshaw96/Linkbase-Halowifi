@@ -162,7 +162,7 @@ async function syncOfflineData() {
     const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
 
     if (offlineData.length > 0) {
-      const apiUrl = APP_API + '/guestConnect';
+      const apiUrl = GUEST_POST_API + '/guest-details';
       try {
         // Loop through all offline data and send it to the server
         for (let data of offlineData) {
