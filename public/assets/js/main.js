@@ -300,7 +300,7 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Connect To The Wifi";
-  subtitle.textContent = propertyDetails.propertySplashPageDescription || "Welcome to Casa-Loma";
+  subtitle.textContent = propertyDetails.locations.name || "Welcome to Casa-Loma";
 
   console.log("✅ Rendered property details successfully.");
 }
