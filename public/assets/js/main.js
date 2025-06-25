@@ -88,6 +88,9 @@ $("#loginBtn").on('click', function() {
     data: login_data,
     success: function(response) {
       console.log(response);
+
+
+      
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
       //window.location.href = response.redirect_url;
@@ -132,6 +135,7 @@ async function handleUserConnect() {
         body: JSON.stringify(requestData),
       });
       console.log(response.json);
+      alert("Pls check")
       
       // Check for HTTP errors
       if (!response.ok) {
