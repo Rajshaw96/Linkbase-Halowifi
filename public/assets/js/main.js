@@ -243,7 +243,7 @@ async function fetchPropertyDetails(locationId) {
 
     const propertyDetails = await response.json();
     console.log("✅ Fetched Property Details:", propertyDetails);
-    console.log("✅ Fetched Property Background Img:", propertyDetails.locations.background_img);
+    console.log("✅ Fetched Property Background Img:", propertyDetails.location.background_img);
 
     if (!propertyDetails || Object.keys(propertyDetails).length === 0) {
       throw new Error("❌ Received empty property details.");
@@ -270,12 +270,12 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   const defaultBgColor = "#0f172a";
-  if (propertyDetails.locations.background_img) {
+  if (propertyDetails.location.background_img) {
     const bgImage = new Image();
-    bgImage.src = propertyDetails.locations.background_img;
+    bgImage.src = propertyDetails.location.background_img;
 
     bgImage.onload = () => {
-      body.style.backgroundImage = `url('${propertyDetails.locations.background_img}')`;
+      body.style.backgroundImage = `url('${propertyDetails.location.background_img}')`;
       body.style.backgroundSize = "cover";
       body.style.backgroundPosition = "center";
     };
@@ -288,8 +288,8 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   if (logoImg) {
-    if (propertyDetails.locations.logo_img) {
-      logoImg.src = propertyDetails.locations.logo_img;
+    if (propertyDetails.location.logo_img) {
+      logoImg.src = propertyDetails.location.logo_img;
       logoImg.alt = "Property Logo";
     } else {
       logoImg.alt = "Logo not available";
@@ -301,7 +301,7 @@ function renderPropertyDetails(propertyDetails) {
   }
 
   splashTitle.textContent = propertyDetails.propertySplashPageTitle || "Connect To The Wifi";
-  subtitle.textContent = propertyDetails.locations.name || "Welcome to Casa-Loma";
+  subtitle.textContent = propertyDetails.location.name || "Welcome to Casa-Loma";
 
   console.log("✅ Rendered property details successfully.");
 }
