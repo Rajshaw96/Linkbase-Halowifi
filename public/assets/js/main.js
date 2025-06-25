@@ -94,7 +94,8 @@ $("#loginBtn").on('click', function() {
       window.location.href = response.redirect_url;
     },
     error: function(error) {
-      alert("Error in triggering login:: "+error);
+      console.log("Error in triggering login:: ", error);
+      // alert("Error in triggering login:: "+error);
     }
   });
 });
@@ -151,11 +152,11 @@ async function handleUserConnect() {
       const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
       offlineData.push(requestData);
       localStorage.setItem("offlineData", JSON.stringify(offlineData));
-      alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
+      //alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
     }
   } catch (error) {
     console.error("Error:", error);
-    alert(`An error occurred: ${error.message}. Please try again.`);
+    //alert(`An error occurred: ${error.message}. Please try again.`);
   }
 }
 
@@ -221,7 +222,7 @@ function getLocationId() {
 async function fetchPropertyDetails(locationId) {
   if (!locationId) {
     console.error("❌ Location ID is missing.");
-    alert("Location ID is required to fetch property details.");
+    console.log("Location ID is required to fetch property details.");
     return;
   }
 
