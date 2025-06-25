@@ -86,14 +86,12 @@ $("#loginBtn").on('click', function() {
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: function(response) {
+    success: async function(response) {
       console.log(response);
-
-
-      
+      await handleUserConnect();
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      //window.location.href = response.redirect_url;
+      window.location.href = response.redirect_url;
     },
     error: function(error) {
       alert("Error in triggering login:: "+error);
@@ -135,7 +133,7 @@ async function handleUserConnect() {
         body: JSON.stringify(requestData),
       });
       console.log(response.json);
-      alert("Pls check")
+      //alert("Pls check")
       
       // Check for HTTP errors
       if (!response.ok) {
@@ -196,7 +194,7 @@ async function syncOfflineData() {
 }
 
 // Event listener for connect button
-document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
+// document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
 
 // Listen for online status change and attempt to sync offline data
 window.addEventListener("online", syncOfflineData);
