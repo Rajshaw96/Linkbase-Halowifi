@@ -90,7 +90,7 @@ $("#loginBtn").on('click', function() {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      window.location.href = response.redirect_url;
+      //window.location.href = response.redirect_url;
     },
     error: function(error) {
       alert("Error in triggering login:: "+error);
@@ -131,7 +131,8 @@ async function handleUserConnect() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
       });
-
+      console.log(response.json);
+      
       // Check for HTTP errors
       if (!response.ok) {
         const errorDetails = await response.json();
@@ -148,7 +149,7 @@ async function handleUserConnect() {
       const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
       offlineData.push(requestData);
       localStorage.setItem("offlineData", JSON.stringify(offlineData));
-      //alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
+      alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
     }
   } catch (error) {
     console.error("Error:", error);
@@ -176,7 +177,7 @@ async function syncOfflineData() {
             const errorDetails = await response.json();
             console.error("Error sending data:", errorDetails);
           } else {
-            //console.log("Offline data synced successfully:", data);
+            console.log("Offline data synced successfully:", data);
           }
         }
 
