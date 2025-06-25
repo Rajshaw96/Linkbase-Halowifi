@@ -1,3 +1,4 @@
+const BRANDING_API="https://one.halowifi.com/api";
 const APP_API="https://us-central1-linkbase-halowifi.cloudfunctions.net/api";
 const LOCATION_API="https://fc7f9s3q4f.execute-api.us-west-2.amazonaws.com/dev/api";
 const GUEST_POST_API="https://6ggwttvljc.execute-api.us-west-2.amazonaws.com/linkbase/api";
