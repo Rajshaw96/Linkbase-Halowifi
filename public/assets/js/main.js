@@ -217,6 +217,7 @@ $("#loginBtn").on('click', function() {
 
 
 function handleUserConnect() {
+  debugger;
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
@@ -250,6 +251,8 @@ function handleUserConnect() {
         throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
       });
     }
+    console.log("Success:", response.json());
+    alert(`Please Check Console Message!!.`);
     return response.json();
   })
   .then(data => {
@@ -267,44 +270,44 @@ function handleUserConnect() {
 
 
 // Method to send offline data once internet is back
-async function syncOfflineData() {
-  debugger;
-  if (navigator.onLine) {
-    const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
+// async function syncOfflineData() {
+//   debugger;
+//   if (navigator.onLine) {
+//     const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
 
-    if (offlineData.length > 0) {
-      const apiUrl = GUEST_POST_API + '/guest-details';
-      try {
-        // Loop through all offline data and send it to the server
-        for (let data of offlineData) {
-          const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
+//     if (offlineData.length > 0) {
+//       const apiUrl = GUEST_POST_API + '/guest-details';
+//       try {
+//         // Loop through all offline data and send it to the server
+//         for (let data of offlineData) {
+//           const response = await fetch(apiUrl, {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(data),
+//           });
 
-          if (!response.ok) {
-            const errorDetails = await response.json();
-            console.error("Error sending data:", errorDetails);
-          } else {
-            console.log("Offline data synced successfully:", data);
-          }
-        }
+//           if (!response.ok) {
+//             const errorDetails = await response.json();
+//             console.error("Error sending data:", errorDetails);
+//           } else {
+//             console.log("Offline data synced successfully:", data);
+//           }
+//         }
 
-        // Clear offline data from local storage after successful sync
-        localStorage.removeItem("offlineData");
+//         // Clear offline data from local storage after successful sync
+//         localStorage.removeItem("offlineData");
 
-      } catch (error) {
-        console.error("Error syncing offline data:", error);
-      }
-    }
-  }
-}
+//       } catch (error) {
+//         console.error("Error syncing offline data:", error);
+//       }
+//     }
+//   }
+// }
 
 // Event listener for connect button
 // document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
 
 // Listen for online status change and attempt to sync offline data
-window.addEventListener("online", syncOfflineData);
+// window.addEventListener("online", syncOfflineData);
 
 
