@@ -206,7 +206,7 @@ $("#loginBtn").on('click', function() {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      window.location.href = response.redirect_url;
+      //window.location.href = response.redirect_url;
     },
     error: function(error) {
       console.log("Error in triggering login:: ", error);
