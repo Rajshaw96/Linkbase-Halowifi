@@ -201,12 +201,12 @@ $("#loginBtn").on('click', function() {
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: function(response) {
+    success: async function(response) {
       console.log(response);
-      //alert("Login url:: "+response.redirect_url);
-      // redirect the user to the url provided in the response
-      handleUserConnect();
-      window.location.href = response.redirect_url;
+      await handleUserConnect();
+      
+      // window.location.href = response.redirect_url
+
     },
     error: function(error) {
       console.log("Error in triggering login:: ", error);
@@ -218,6 +218,7 @@ $("#loginBtn").on('click', function() {
 
 // Method to handle user connection and save data offline if no internet
 async function handleUserConnect() {
+  debugger;
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
@@ -240,82 +241,32 @@ async function handleUserConnect() {
   const apiUrl = GUEST_POST_API + '/guest-details';
 
   try {
-    // Check for internet connection
-    if (navigator.onLine) {
-      // If online, send data to the server
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
-      });
-      console.log(response.json);
-      //alert("Pls check")
-      
-      // Check for HTTP errors
-      if (!response.ok) {
-        const errorDetails = await response.json();
-        throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
-      }
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestData),
+    });
 
-      // Clear input fields after successful submission
-      document.getElementById("guestFullName").value = "";
-      document.getElementById("guestPhoneNo").value = "";
-      document.getElementById("guestEmailId").value = "";
 
-    } else {
-      // If offline, store the data in local storage for later sync
-      const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-      offlineData.push(requestData);
-      localStorage.setItem("offlineData", JSON.stringify(offlineData));
-      console.log(offlineData);
-      console.log("No internet connection. Your data has been saved locally and will be sent once you're online.");
-      //alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
+    // log raw response or parsed data
+    const result = await response.json();
+    console.log(result);
+
+    if (!response.ok) {
+      throw new Error(result.message || `HTTP error! Status: ${response.status}`);
     }
+
+    console.log(window.location.href = response.redirect_url);
+
+    window.location.href = response.redirect_url;
+
+    // Clear input fields after successful submission
+    document.getElementById("guestFullName").value = "";
+    document.getElementById("guestPhoneNo").value = "";
+    document.getElementById("guestEmailId").value = "";
+
   } catch (error) {
-    console.error("Error:", error);
-    //alert(`An error occurred: ${error.message}. Please try again.`);
+    console.error("Error occurred:", error.message);
+    alert("Something went wrong. Please try again.");
   }
 }
-
-// Method to send offline data once internet is back
-async function syncOfflineData() {
-  debugger;
-  if (navigator.onLine) {
-    const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-
-    if (offlineData.length > 0) {
-      const apiUrl = GUEST_POST_API + '/guest-details';
-      try {
-        // Loop through all offline data and send it to the server
-        for (let data of offlineData) {
-          const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-
-          if (!response.ok) {
-            const errorDetails = await response.json();
-            console.error("Error sending data:", errorDetails);
-          } else {
-            console.log("Offline data synced successfully:", data);
-          }
-        }
-
-        // Clear offline data from local storage after successful sync
-        localStorage.removeItem("offlineData");
-
-      } catch (error) {
-        console.error("Error syncing offline data:", error);
-      }
-    }
-  }
-}
-
-// Event listener for connect button
-document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
-
-// Listen for online status change and attempt to sync offline data
-window.addEventListener("online", syncOfflineData);
-
-
