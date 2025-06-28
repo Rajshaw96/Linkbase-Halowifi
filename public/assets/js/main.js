@@ -195,6 +195,8 @@ $("#loginBtn").on('click', function() {
     login_app_id: login_app_id
   };
 
+  handleUserConnect();
+  
   var guest_login_api_url = APP_API+'/connect/external/trigger-login';
 
   $.ajax({
@@ -205,7 +207,6 @@ $("#loginBtn").on('click', function() {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      handleUserConnect();
       window.location.href = response.redirect_url;
     },
     error: function(error) {
@@ -218,6 +219,7 @@ $("#loginBtn").on('click', function() {
 
 // Method to handle user connection and save data offline if no internet
 function handleUserConnect() {
+  debugger
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
