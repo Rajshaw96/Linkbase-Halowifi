@@ -37,7 +37,7 @@ function closeModal(type) {
 $(document).ready(function() {
   // on button click
   $('#loginBtn').on('click', function() {
-    console.log('loginBtn clicked');
+    // console.log('loginBtn clicked');
   }); 
 
   // verify if the $_GET has location_id, user_id and session_id
@@ -201,11 +201,11 @@ $("#loginBtn").on('click', function() {
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: async function(response) {
+    success: function(response) {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      await handleUserConnect();
+      handleUserConnect();
       window.location.href = response.redirect_url;
     },
     error: function(error) {
@@ -313,7 +313,7 @@ async function syncOfflineData() {
 }
 
 // Event listener for connect button
-// document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
+document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
 
 // Listen for online status change and attempt to sync offline data
 window.addEventListener("online", syncOfflineData);
