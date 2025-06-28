@@ -201,11 +201,11 @@ $("#loginBtn").on('click', function() {
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: function(response) {
+    success: async function(response) {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      handleUserConnect();
+      await handleUserConnect();
       window.location.href = response.redirect_url;
     },
     error: function(error) {
