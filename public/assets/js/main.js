@@ -201,11 +201,11 @@ $("#loginBtn").on('click', function() {
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: async function(response) {
+    success: function(response) {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      await handleUserConnect();
+      handleUserConnect();
       window.location.href = response.redirect_url;
     },
     error: function(error) {
@@ -217,7 +217,7 @@ $("#loginBtn").on('click', function() {
 
 
 // Method to handle user connection and save data offline if no internet
-async function handleUserConnect() {
+function handleUserConnect() {
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
@@ -229,53 +229,38 @@ async function handleUserConnect() {
 
   // Create a data object to send to the API
   const requestData = {
-    guestFullName: guestFullName,    
-    guestPhoneNo: guestPhoneNo,      
-    guestEmailId: guestEmailId,      
-    propertyLocationId: location_id,   
-    propertyNetworkId: network_id,   
+    guestFullName: guestFullName,
+    guestPhoneNo: guestPhoneNo,
+    guestEmailId: guestEmailId,
+    propertyLocationId: location_id,
+    propertyNetworkId: network_id,
   };
 
   // API URL
   const apiUrl = GUEST_POST_API + '/guest-details';
 
+  // Make synchronous request using XMLHttpRequest
   try {
-    // Check for internet connection
-    if (navigator.onLine) {
-      // If online, send data to the server
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
-      });
-      console.log(response.json);
-      //alert("Pls check")
-      
-      // Check for HTTP errors
-      if (!response.ok) {
-        const errorDetails = await response.json();
-        throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
-      }
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", apiUrl, false); // false makes it synchronous
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(requestData));
 
+    if (xhr.status >= 200 && xhr.status < 300) {
       // Clear input fields after successful submission
       document.getElementById("guestFullName").value = "";
       document.getElementById("guestPhoneNo").value = "";
       document.getElementById("guestEmailId").value = "";
-
     } else {
-      // If offline, store the data in local storage for later sync
-      const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-      offlineData.push(requestData);
-      localStorage.setItem("offlineData", JSON.stringify(offlineData));
-      console.log(offlineData);
-      console.log("No internet connection. Your data has been saved locally and will be sent once you're online.");
-      //alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
+      const errorResponse = JSON.parse(xhr.responseText);
+      throw new Error(errorResponse.message || `HTTP error! Status: ${xhr.status}`);
     }
   } catch (error) {
     console.error("Error:", error);
-    //alert(`An error occurred: ${error.message}. Please try again.`);
+    // alert(`An error occurred: ${error.message}. Please try again.`);
   }
 }
+
 
 // Method to send offline data once internet is back
 async function syncOfflineData() {
