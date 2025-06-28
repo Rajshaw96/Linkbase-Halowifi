@@ -175,6 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 $("#loginBtn").on('click', function() {
   console.log('loginBtn clicked');
+  await handleUserConnect();
   // collect location_id, user_id and session_id from url and send it to the guest login app's 
   // api where this data will be processed and then send to halowifi api to enable access and 
   // trigger wifi login. HaloWiFi api will respond with a redirection url to which you should redirect 
@@ -195,15 +196,13 @@ $("#loginBtn").on('click', function() {
     login_app_id: login_app_id
   };
 
-  handleUserConnect();
-  
   var guest_login_api_url = APP_API+'/connect/external/trigger-login';
 
   $.ajax({
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: function(response) {
+    success: async function(response) {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
@@ -217,9 +216,7 @@ $("#loginBtn").on('click', function() {
 });
 
 
-// Method to handle user connection and save data offline if no internet
 function handleUserConnect() {
-  debugger
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
@@ -231,36 +228,41 @@ function handleUserConnect() {
 
   // Create a data object to send to the API
   const requestData = {
-    guestFullName: guestFullName,
-    guestPhoneNo: guestPhoneNo,
-    guestEmailId: guestEmailId,
-    propertyLocationId: location_id,
-    propertyNetworkId: network_id,
+    guestFullName: guestFullName,    
+    guestPhoneNo: guestPhoneNo,      
+    guestEmailId: guestEmailId,      
+    propertyLocationId: location_id,   
+    propertyNetworkId: network_id,   
   };
 
   // API URL
   const apiUrl = GUEST_POST_API + '/guest-details';
 
-  // Make synchronous request using XMLHttpRequest
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", apiUrl, false); // false makes it synchronous
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(requestData));
-
-    if (xhr.status >= 200 && xhr.status < 300) {
-      // Clear input fields after successful submission
-      document.getElementById("guestFullName").value = "";
-      document.getElementById("guestPhoneNo").value = "";
-      document.getElementById("guestEmailId").value = "";
-    } else {
-      const errorResponse = JSON.parse(xhr.responseText);
-      throw new Error(errorResponse.message || `HTTP error! Status: ${xhr.status}`);
+  // Send data to the server using fetch
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestData),
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorDetails => {
+        throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+      });
     }
-  } catch (error) {
-    console.error("Error:", error);
+    return response.json();
+  })
+  .then(data => {
+    console.log("Success:", data);
+    // Clear input fields after successful submission
+    document.getElementById("guestFullName").value = "";
+    document.getElementById("guestPhoneNo").value = "";
+    document.getElementById("guestEmailId").value = "";
+  })
+  .catch(error => {
+    console.error("Error:", error.message);
     // alert(`An error occurred: ${error.message}. Please try again.`);
-  }
+  });
 }
 
 
