@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 $("#loginBtn").on('click', function() {
   console.log('loginBtn clicked');
-  await handleUserConnect();
+  handleUserConnect();
   // collect location_id, user_id and session_id from url and send it to the guest login app's 
   // api where this data will be processed and then send to halowifi api to enable access and 
   // trigger wifi login. HaloWiFi api will respond with a redirection url to which you should redirect 
