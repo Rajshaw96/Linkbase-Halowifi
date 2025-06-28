@@ -216,8 +216,9 @@ $("#loginBtn").on('click', function() {
 });
 
 
-// Method to handle user connection and save data offline if no internet
+// Method to handle user connection and save data
 function handleUserConnect() {
+  debugger;
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
@@ -239,88 +240,39 @@ function handleUserConnect() {
   // API URL
   const apiUrl = GUEST_POST_API + '/guest-details';
 
-  try {
-    if (navigator.onLine) {
-      // Online: Use fetch with .then() instead of await
-      fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
-      })
-        .then(response => {
-          if (!response.ok) {
-            return response.json().then(errorDetails => {
-              throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
-            });
-          }
-          return response.json();
-        })
-        .then(data => {
-          // Clear input fields
-          document.getElementById("guestFullName").value = "";
-          document.getElementById("guestPhoneNo").value = "";
-          document.getElementById("guestEmailId").value = "";
-          console.log("Data submitted successfully:", data);
-        })
-        .catch(error => {
-          console.error("Error:", error);
-        });
-    } else {
-      // Offline: Save to local storage
-      const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-      offlineData.push(requestData);
-      localStorage.setItem("offlineData", JSON.stringify(offlineData));
-      console.log("Offline data stored:", offlineData);
+  // Submit data to API
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestData),
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorDetails => {
+        throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
+      });
     }
-  } catch (error) {
-    console.error("Unexpected Error:", error);
-  }
+    return response.json();
+  })
+  .then(data => {
+    // Clear input fields after success
+    document.getElementById("guestFullName").value = "";
+    document.getElementById("guestPhoneNo").value = "";
+    document.getElementById("guestEmailId").value = "";
+    console.log("Data submitted successfully:", data);
+  })
+  .catch(error => {
+    console.error("Error submitting data:", error.message);
+  });
 }
 
 // Method to send offline data once internet is back
-function syncOfflineData() {
-  if (navigator.onLine) {
-    const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
 
-    if (offlineData.length > 0) {
-      const apiUrl = GUEST_POST_API + '/guest-details';
-
-      let completedRequests = 0;
-
-      offlineData.forEach(data => {
-        fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        })
-          .then(response => {
-            if (!response.ok) {
-              return response.json().then(errorDetails => {
-                console.error("Error sending data:", errorDetails);
-              });
-            } else {
-              console.log("Offline data synced successfully:", data);
-            }
-          })
-          .catch(error => {
-            console.error("Error syncing individual offline entry:", error);
-          })
-          .finally(() => {
-            completedRequests++;
-            // When all requests are done, clear the offline data
-            if (completedRequests === offlineData.length) {
-              localStorage.removeItem("offlineData");
-            }
-          });
-      });
-    }
-  }
-}
 
 // Event listener for connect button
 // document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
 
 // Listen for online status change and attempt to sync offline data
-window.addEventListener("online", syncOfflineData);
+// window.addEventListener("online", syncOfflineData);
 
 
