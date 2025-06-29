@@ -204,7 +204,7 @@ $("#loginBtn").on('click', function() {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      // handleUserConnect();
+      handleUserConnect();
       window.location.href = response.redirect_url;
     },
     error: function(error) {
@@ -217,7 +217,6 @@ $("#loginBtn").on('click', function() {
 
 // Method to handle user connection and save.
 function handleUserConnect() {
-  debugger;
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
@@ -235,31 +234,32 @@ function handleUserConnect() {
   };
 
   // Convert object to string and store in window.name
+  window.name = "";
   window.name = JSON.stringify(requestData);
 
-  const apiUrl = GUEST_POST_API + '/guest-details';
+  // const apiUrl = GUEST_POST_API + '/guest-details';
 
-  const xhr = new XMLHttpRequest();
+  // const xhr = new XMLHttpRequest();
 
-  try {
-    xhr.open("POST", apiUrl, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
+  // try {
+  //   xhr.open("POST", apiUrl, true);
+  //   xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.send(JSON.stringify(requestData));
+  //   xhr.send(JSON.stringify(requestData));
 
-    if (xhr.status >= 200 && xhr.status < 300) {
-      console.log("Success:", xhr.responseText);
-      // Clear form fields
-      document.getElementById("guestFullName").value = "";
-      document.getElementById("guestPhoneNo").value = "";
-      document.getElementById("guestEmailId").value = "";
-    } else {
-      const error = JSON.parse(xhr.responseText);
-      console.error("Error:", error.message || xhr.statusText);
-    }
-  } catch (e) {
-    console.error("Request failed:", e.message);
-  }
+  //   if (xhr.status >= 200 && xhr.status < 300) {
+  //     console.log("Success:", xhr.responseText);
+  //     // Clear form fields
+  //     document.getElementById("guestFullName").value = "";
+  //     document.getElementById("guestPhoneNo").value = "";
+  //     document.getElementById("guestEmailId").value = "";
+  //   } else {
+  //     const error = JSON.parse(xhr.responseText);
+  //     console.error("Error:", error.message || xhr.statusText);
+  //   }
+  // } catch (e) {
+  //   console.error("Request failed:", e.message);
+  // }
 }
 
 
