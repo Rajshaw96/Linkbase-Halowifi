@@ -205,8 +205,8 @@ $("#loginBtn").on('click', function() {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      window.location.href = response.redirect_url;
       handleUserConnect();
+      window.location.href = response.redirect_url;
     },
     error: function(error) {
       console.log("Error in triggering login:: ", error);
@@ -216,65 +216,48 @@ $("#loginBtn").on('click', function() {
 });
 
 
-// Method to handle user connection and save data offline if no internet
-async function handleUserConnect() {
+// Method to handle user connection and save.
+function handleUserConnect() {
   debugger;
   const guestFullName = document.getElementById("guestFullName").value.trim();
   const guestPhoneNo = document.getElementById("guestPhoneNo").value.trim();
   const guestEmailId = document.getElementById("guestEmailId").value.trim();
 
-  // Extract location_id & network_id from the URL
   const params = new URLSearchParams(window.location.search);
   const location_id = params.get('location_id');
   const network_id = params.get('network_id');
 
-  // Create a data object to send to the API
   const requestData = {
-    guestFullName: guestFullName,    
-    guestPhoneNo: guestPhoneNo,      
-    guestEmailId: guestEmailId,      
-    propertyLocationId: location_id,   
-    propertyNetworkId: network_id,   
+    guestFullName: guestFullName,
+    guestPhoneNo: guestPhoneNo,
+    guestEmailId: guestEmailId,
+    propertyLocationId: location_id,
+    propertyNetworkId: network_id,
   };
 
-  // API URL
   const apiUrl = GUEST_POST_API + '/guest-details';
 
-  try {
-    // Check for internet connection
-    if (navigator.onLine) {
-      // If online, send data to the server
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
-      });
-      console.log(response.json);
-      //alert("Pls check")
-      
-      // Check for HTTP errors
-      if (!response.ok) {
-        const errorDetails = await response.json();
-        throw new Error(errorDetails.message || `HTTP error! Status: ${response.status}`);
-      }
+  const xhr = new XMLHttpRequest();
 
-      // Clear input fields after successful submission
+  try {
+    // Open a synchronous POST request (3rd param = false makes it synchronous)
+    xhr.open("POST", apiUrl, false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(JSON.stringify(requestData));
+
+    if (xhr.status >= 200 && xhr.status < 300) {
+      console.log("Success:", xhr.responseText);
+      // Clear form fields
       document.getElementById("guestFullName").value = "";
       document.getElementById("guestPhoneNo").value = "";
       document.getElementById("guestEmailId").value = "";
-
     } else {
-      // If offline, store the data in local storage for later sync
-      const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-      offlineData.push(requestData);
-      localStorage.setItem("offlineData", JSON.stringify(offlineData));
-      console.log(offlineData);
-      console.log("No internet connection. Your data has been saved locally and will be sent once you're online.");
-      //alert("No internet connection. Your data has been saved locally and will be sent once you're online.");
+      const error = JSON.parse(xhr.responseText);
+      console.error("Error:", error.message || xhr.statusText);
     }
-  } catch (error) {
-    console.error("Error:", error);
-    //alert(`An error occurred: ${error.message}. Please try again.`);
+  } catch (e) {
+    console.error("Request failed:", e.message);
   }
 }
 
