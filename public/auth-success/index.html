@@ -70,6 +70,7 @@
       console.warn("⚠️ window.name is empty or invalid.");
       const emptyMsg = document.createElement("p");
       emptyMsg.textContent = "No guest data found in this session.";
+      emptyMsg.textContent = window.name;
       document.querySelector('.container').appendChild(emptyMsg);
     }
   </script>
