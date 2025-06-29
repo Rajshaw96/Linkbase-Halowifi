@@ -34,29 +34,6 @@ function closeModal(type) {
   document.getElementById(modalId).style.display = 'none';
 }
 
-$(document).ready(function() {
-  // on button click
-  $('#loginBtn').on('click', function() {
-    console.log('loginBtn clicked');
-  }); 
-
-  // verify if the $_GET has location_id, user_id and session_id
-  var url = window.location.href;
-  var params = url.split('?')[1];
-  var params = new URLSearchParams(params);
-  console.log(params);
-  if(!(params.has('location_id') && params.has('network_id') && params.has('session_id'))) {
-    console.log('location_id, network_id, or session_id are not defined');
-    // hide the loginBtn, welcome back text and checkbox
-    $('#loginBtn').hide();
-    // hide the checkbox
-    $(".checkbox-wrapper").addClass('hidden');
-    // show  this text 
-    $('#loginRequestMalformed').removeClass('hidden');
-    document.getElementById('login-url').innerHTML = url;
-  }
-});
-
 // Function to get location_id from URL or sessionStorage
 function getLocationId() {
   const params = new URLSearchParams(window.location.search);
@@ -172,6 +149,30 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchPropertyDetails(locationId);
   }
 });
+
+$(document).ready(function() {
+  // on button click
+  $('#loginBtn').on('click', function() {
+    console.log('loginBtn clicked');
+  }); 
+
+  // verify if the $_GET has location_id, user_id and session_id
+  var url = window.location.href;
+  var params = url.split('?')[1];
+  var params = new URLSearchParams(params);
+  console.log(params);
+  if(!(params.has('location_id') && params.has('network_id') && params.has('session_id'))) {
+    console.log('location_id, network_id, or session_id are not defined');
+    // hide the loginBtn, welcome back text and checkbox
+    $('#loginBtn').hide();
+    // hide the checkbox
+    $(".checkbox-wrapper").addClass('hidden');
+    // show  this text 
+    $('#loginRequestMalformed').removeClass('hidden');
+    document.getElementById('login-url').innerHTML = url;
+  }
+});
+
 
 $("#loginBtn").on('click', function() {
   console.log('loginBtn clicked');
