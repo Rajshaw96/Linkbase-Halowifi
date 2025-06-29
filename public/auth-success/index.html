@@ -19,51 +19,58 @@
   <script>
     console.log("🌐 Page loaded. Checking window.name...");
 
-    try {
-      // Step 1: Parse window.name
-      const data = JSON.parse(window.name);
-      console.log("✅ Parsed window.name:", data);
+    if (window.name && window.name.trim().length > 0) {
+      try {
+        // Step 1: Parse window.name
+        const data = JSON.parse(window.name);
+        console.log("✅ Parsed window.name:", data);
 
-      // Step 2: Show guest name on the page
-      const welcome = document.createElement("p");
-      welcome.textContent = `Welcome, ${data.guestFullName}!`;
-      document.querySelector('.container').appendChild(welcome);
+        // Step 2: Show guest name on the page
+        const welcome = document.createElement("p");
+        welcome.textContent = `Welcome, ${data.guestFullName}!`;
+        document.querySelector('.container').appendChild(welcome);
 
-      // Step 3: Prepare to call API
-      const apiUrl = "https://6ggwttvljc.execute-api.us-west-2.amazonaws.com/linkbase/api/guest-details";
-      console.log("📡 Sending POST request to:", apiUrl);
-      console.log("📦 Request body:", data);
+        // Step 3: Prepare to call API
+        const apiUrl = "https://6ggwttvljc.execute-api.us-west-2.amazonaws.com/linkbase/api/guest-details";
+        console.log("📡 Sending POST request to:", apiUrl);
+        console.log("📦 Request body:", data);
 
-      // Step 4: Make POST request
-      fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        console.log("📥 Raw response received:", response);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        return response.json();
-      })
-      .then(result => {
-        console.log("✅ API response received:", result);
-        // Optional: Clear window.name for security
-        // window.name = "";
-      })
-      .catch(error => {
-        console.error("❌ POST request failed:", error);
-      const err = document.createElement("p");
-      err.textContent = `Error Message:, ${error}!`;
-      document.querySelector('.container').appendChild(err);
-      });
+        // Step 4: Make POST request
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => {
+          console.log("📥 Raw response received:", response);
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+          return response.json();
+        })
+        .then(result => {
+          console.log("✅ API response received:", result);
+          // Optional: Clear window.name for security
+          // window.name = "";
+        })
+        .catch(error => {
+          console.error("❌ POST request failed:", error);
+          const err = document.createElement("p");
+          err.textContent = `Error Message: ${error.message}`;
+          document.querySelector('.container').appendChild(err);
+        });
 
-    } catch (err) {
-      console.error("❌ Error parsing window.name:", err);
-      const err1 = document.createElement("p");
-      err1.textContent = `Error Message:, ${err}`;
-      document.querySelector('.container').appendChild(err1);
+      } catch (err) {
+        console.error("❌ Error parsing window.name JSON:", err);
+        const err1 = document.createElement("p");
+        err1.textContent = `Error parsing data: ${err.message}`;
+        document.querySelector('.container').appendChild(err1);
+      }
+    } else {
+      console.warn("⚠️ window.name is empty or invalid.");
+      const emptyMsg = document.createElement("p");
+      emptyMsg.textContent = "No guest data found in this session.";
+      document.querySelector('.container').appendChild(emptyMsg);
     }
   </script>
 </body>
