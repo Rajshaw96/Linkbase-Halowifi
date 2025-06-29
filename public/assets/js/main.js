@@ -201,12 +201,12 @@ $("#loginBtn").on('click', function() {
     url: guest_login_api_url,
     method: 'POST',
     data: login_data,
-    success: async function(response) {
+    success: function(response) {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      await handleUserConnect();
       window.location.href = response.redirect_url;
+      handleUserConnect();
     },
     error: function(error) {
       console.log("Error in triggering login:: ", error);
