@@ -54,10 +54,16 @@
       })
       .catch(error => {
         console.error("❌ POST request failed:", error);
+      const welcome = document.createElement("p");
+      welcome.textContent = `Error Message:, ${error}!`;
+      document.querySelector('.container').appendChild(welcome);
       });
 
     } catch (err) {
       console.error("❌ Error parsing window.name:", err);
+      const welcome = document.createElement("p");
+      welcome.textContent = `Error Message:, ${err}`;
+      document.querySelector('.container').appendChild(welcome);
     }
   </script>
 </body>
