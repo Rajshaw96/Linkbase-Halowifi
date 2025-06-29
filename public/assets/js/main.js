@@ -240,8 +240,7 @@ function handleUserConnect() {
   const xhr = new XMLHttpRequest();
 
   try {
-    // Open a synchronous POST request (3rd param = false makes it synchronous)
-    xhr.open("POST", apiUrl, false);
+    xhr.open("POST", apiUrl, true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.send(JSON.stringify(requestData));
@@ -260,46 +259,5 @@ function handleUserConnect() {
     console.error("Request failed:", e.message);
   }
 }
-
-// Method to send offline data once internet is back
-// async function syncOfflineData() {
-//   debugger;
-//   if (navigator.onLine) {
-//     const offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-
-//     if (offlineData.length > 0) {
-//       const apiUrl = GUEST_POST_API + '/guest-details';
-//       try {
-//         // Loop through all offline data and send it to the server
-//         for (let data of offlineData) {
-//           const response = await fetch(apiUrl, {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify(data),
-//           });
-
-//           if (!response.ok) {
-//             const errorDetails = await response.json();
-//             console.error("Error sending data:", errorDetails);
-//           } else {
-//             console.log("Offline data synced successfully:", data);
-//           }
-//         }
-
-//         // Clear offline data from local storage after successful sync
-//         localStorage.removeItem("offlineData");
-
-//       } catch (error) {
-//         console.error("Error syncing offline data:", error);
-//       }
-//     }
-//   }
-// }
-
-// Event listener for connect button
-// document.getElementById("loginBtn").addEventListener("click", handleUserConnect);
-
-// Listen for online status change and attempt to sync offline data
-// window.addEventListener("online", syncOfflineData);
 
 
