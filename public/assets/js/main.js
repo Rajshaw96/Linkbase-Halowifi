@@ -184,9 +184,7 @@ $("#loginBtn").on('click', function() {
   var params = url.split('?')[1];
   var params = new URLSearchParams(params);
   var location_id = params.get('location_id');
-  // var user_id = params.get('user_id');
   var session_id = params.get('session_id');
-  // var login_app_id = params.get('login_app_id');
   var login_app_id = LOGIN_APP_ID; // Login APP Id Coming  from config.js file
 
   var login_data = {
@@ -206,7 +204,7 @@ $("#loginBtn").on('click', function() {
       console.log(response);
       //alert("Login url:: "+response.redirect_url);
       // redirect the user to the url provided in the response
-      handleUserConnect();
+      // handleUserConnect();
       window.location.href = response.redirect_url;
     },
     error: function(error) {
@@ -235,6 +233,9 @@ function handleUserConnect() {
     propertyLocationId: location_id,
     propertyNetworkId: network_id,
   };
+
+  // Convert object to string and store in window.name
+  window.name = JSON.stringify(requestData);
 
   const apiUrl = GUEST_POST_API + '/guest-details';
 

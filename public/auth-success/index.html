@@ -9,12 +9,56 @@
 </head>
 <body>
   <div class="container">
-    <div class="success-icon">🌐</div> <!-- Changed icon to a globe -->
+    <div class="success-icon">🌐</div>
     <h1>Authentication Successful!</h1>
     <p>Congratulations! Your Wi-Fi authentication is successfully completed.</p>
     <p style="margin-top: -20px;">Enjoy browsing with our high-speed internet connection!</p>
     <a href="https://www.google.com/" target="_self" class="btn">Start Browsing</a>
   </div>
-  <!-- <script src="../assets/js/auth/auth.js"></script> -->
+
+  <script>
+    console.log("🌐 Page loaded. Checking window.name...");
+
+    try {
+      // Step 1: Parse window.name
+      const data = JSON.parse(window.name);
+      console.log("✅ Parsed window.name:", data);
+
+      // Step 2: Show guest name on the page
+      const welcome = document.createElement("p");
+      welcome.textContent = `Welcome, ${data.guestFullName}!`;
+      document.querySelector('.container').appendChild(welcome);
+
+      // Step 3: Prepare to call API
+      const apiUrl = "https://6ggwttvljc.execute-api.us-west-2.amazonaws.com/linkbase/api/guest-details";
+      console.log("📡 Sending POST request to:", apiUrl);
+      console.log("📦 Request body:", data);
+
+      // Step 4: Make POST request
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        console.log("📥 Raw response received:", response);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        return response.json();
+      })
+      .then(result => {
+        console.log("✅ API response received:", result);
+        // Optional: Clear window.name for security
+        // window.name = "";
+      })
+      .catch(error => {
+        console.error("❌ POST request failed:", error);
+      });
+
+    } catch (err) {
+      console.error("❌ Error parsing window.name:", err);
+    }
+  </script>
 </body>
 </html>
